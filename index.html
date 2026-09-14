@@ -1121,6 +1121,30 @@
     .toast-undo-btn:active { transform: scale(0.95); }
     .toast-undo-btn svg { width: 12px; height: 12px; }
 
+    .reset-area {
+      margin-top: 34px;
+      padding-top: 12px;
+      text-align: center;
+      border-top: 1px solid color-mix(in oklch, var(--border) 55%, transparent);
+    }
+    .reset-discreet {
+      border: 0;
+      background: transparent;
+      color: var(--muted-foreground);
+      font-size: 0.68rem;
+      font-weight: 500;
+      opacity: 0.5;
+      padding: 5px 8px;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: opacity 0.2s, color 0.2s, background 0.2s;
+    }
+    .reset-discreet:hover {
+      opacity: 1;
+      color: var(--destructive);
+      background: color-mix(in oklch, var(--destructive) 7%, transparent);
+    }
+
     /* Animations */
     @keyframes xp-float {
       0% { opacity: 0; transform: translateY(6px) scale(0.85); }
@@ -1761,6 +1785,11 @@
         buildWeekCard(),
         buildChoresSection(),
         buildAddChoreSection(),
+        `<div class="reset-area">
+          <button class="reset-discreet" data-action="reset-progress" aria-label="Reset all progress">
+            Reset progress
+          </button>
+        </div>`,
       ].join("");
     }
 
@@ -2591,6 +2620,45 @@
       render();
     }
 
+    /* Reset all gameplay progress while keeping the chore and reward lists. */
+    function resetProgress() {
+      const confirmed = window.confirm(
+        "Reset all progress to 0? This will clear XP, level progress, coins, streaks, completions, badge progress, reward history, and weekly history. Your chores and rewards will stay."
+      );
+      if (!confirmed) return;
+
+      state = {
+        ...state,
+        totalXp: 0,
+        streak: 0,
+        bestStreak: 0,
+        lastCompletedDay: null,
+        completedCount: 0,
+        lastResetWeek: null,
+        coins: 0,
+        redeemed: [],
+        xpLog: {},
+        completionsLog: {},
+        dailySnapshots: {},
+        freezes: 1,
+        perfectWeeks: 0,
+        rewardsClaimed: 0,
+        chores: state.chores.map((c) => {
+          const { completionMeta, ...rest } = c;
+          return { ...rest, completedAt: null };
+        }),
+      };
+
+      pendingUndo = null;
+      hideUndoToast();
+      ui.levelUpModal = null;
+      levelUpToken++;
+      haptic([20, 40, 20]);
+      saveState(state);
+      showToast("Progress reset to 0", "rotate-ccw");
+      render();
+    }
+
     function deleteChore(id) {
       const idx = state.chores.findIndex((c) => c.id === id);
       if (idx === -1) return;
@@ -2687,6 +2755,7 @@
 
       switch (action) {
         case "toggle-theme": ui.dark = !ui.dark; applyTheme(); render(); break;
+        case "reset-progress": resetProgress(); break;
         case "toggle-notifications": notifActive() ? disableNotifications() : requestNotificationPermission(); break;
         case "open-shop": closeAllSheets(); ui.shopOpen = true; render(); break;
         case "close-shop": ui.shopOpen = false; ui.rewardFormOpen = false; render(); break;

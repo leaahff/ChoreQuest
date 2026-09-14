@@ -1,296 +1,2840 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>Cookie check</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        color-scheme: light dark;
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chorequest — Level up your household chores</title>
+  <meta name="description" content="Turn weekly and monthly chores into a game: earn XP, keep your streak alive, unlock badges and level up every time you clean.">
+  <meta property="og:title" content="Chorequest — Level up your household chores">
+  <meta property="og:description" content="Turn weekly and monthly chores into a game: earn XP, keep your streak alive, unlock badges and level up every time you clean.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- ===== PWA ===== -->
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#40a88b" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c2a2a" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Chorequest">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+  <!-- ===== /PWA ===== -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --radius: 1rem;
+      --background: oklch(0.985 0.012 95);
+      --foreground: oklch(0.24 0.03 165);
+      --card: oklch(1 0 0);
+      --card-foreground: oklch(0.24 0.03 165);
+      --primary: oklch(0.62 0.13 172);
+      --primary-foreground: oklch(0.99 0.01 170);
+      --secondary: oklch(0.95 0.02 170);
+      --secondary-foreground: oklch(0.32 0.05 170);
+      --muted: oklch(0.955 0.012 120);
+      --muted-foreground: oklch(0.53 0.02 170);
+      --accent: oklch(0.8 0.15 78);
+      --accent-foreground: oklch(0.28 0.06 60);
+      --destructive: oklch(0.6 0.19 25);
+      --destructive-foreground: oklch(0.99 0 0);
+      --border: oklch(0.9 0.015 160);
+      --input: oklch(0.92 0.012 160);
+      --ring: oklch(0.62 0.13 172);
+      --xp: oklch(0.62 0.13 172);
+      --streak: oklch(0.7 0.17 45);
+      --badge: oklch(0.65 0.15 300);
+      --freeze: oklch(0.72 0.12 230);
+      --positive: oklch(0.65 0.15 155);
+      --negative: oklch(0.6 0.18 25);
+      --easy: oklch(0.68 0.13 160);
+      --medium: oklch(0.76 0.15 80);
+      --hard: oklch(0.63 0.17 25);
+      --shadow-soft: 0 1px 2px oklch(0.3 0.03 170 / 0.06), 0 6px 16px oklch(0.3 0.03 170 / 0.06);
+      --shadow-lift: 0 10px 30px oklch(0.3 0.03 170 / 0.14);
+      --shadow-sheet: 0 -20px 60px oklch(0 0 0 / 0.25);
+      --font-display: "Space Grotesk", ui-sans-serif, sans-serif;
+      --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    }
+    html.dark {
+      --background: oklch(0.19 0.02 175);
+      --foreground: oklch(0.96 0.01 160);
+      --card: oklch(0.235 0.022 175);
+      --card-foreground: oklch(0.96 0.01 160);
+      --primary: oklch(0.75 0.14 172);
+      --primary-foreground: oklch(0.2 0.03 175);
+      --secondary: oklch(0.29 0.025 175);
+      --secondary-foreground: oklch(0.94 0.01 160);
+      --muted: oklch(0.28 0.02 175);
+      --muted-foreground: oklch(0.72 0.02 165);
+      --accent: oklch(0.82 0.15 78);
+      --accent-foreground: oklch(0.24 0.05 60);
+      --destructive: oklch(0.66 0.18 25);
+      --destructive-foreground: oklch(0.98 0 0);
+      --border: oklch(1 0 0 / 10%);
+      --input: oklch(1 0 0 / 14%);
+      --ring: oklch(0.75 0.14 172);
+      --xp: oklch(0.78 0.14 172);
+      --streak: oklch(0.78 0.16 55);
+      --badge: oklch(0.78 0.14 300);
+      --freeze: oklch(0.8 0.13 230);
+      --positive: oklch(0.78 0.14 155);
+      --negative: oklch(0.72 0.17 25);
+      --easy: oklch(0.75 0.13 160);
+      --medium: oklch(0.82 0.14 85);
+      --hard: oklch(0.7 0.16 25);
+      --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.3), 0 6px 16px oklch(0 0 0 / 0.28);
+      --shadow-lift: 0 12px 34px oklch(0 0 0 / 0.45);
+      --shadow-sheet: 0 -20px 60px oklch(0 0 0 / 0.6);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--background);
+      color: var(--foreground);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    body.sheet-open { overflow: hidden; }
+    h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.02em; margin: 0; }
+    p { margin: 0; }
+    button { font: inherit; }
+    input, select { font: inherit; color: inherit; }
+    svg { display: block; }
+
+    .app { max-width: 460px; margin: 0 auto; padding: 20px 16px 60px; }
+
+    /* Header */
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; gap: 8px;
+    }
+    .brand { min-width: 0; }
+    .brand h1 { font-size: 1.2rem; font-weight: 800; }
+    .brand p { font-size: 0.72rem; color: var(--muted-foreground); }
+    .header-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+    .icon-btn {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted-foreground);
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      position: relative;
+      padding: 0;
+    }
+    .icon-btn:hover { color: var(--foreground); }
+    .icon-btn > svg, .icon-btn > i { width: 15px; height: 15px; }
+    .icon-btn.notif-on { border-color: var(--primary); color: var(--primary); }
+    .icon-btn.notif-off { opacity: 0.6; }
+    .icon-btn.shop-btn {
+      border-color: color-mix(in oklch, var(--xp) 40%, var(--border));
+      color: var(--xp);
+    }
+    .icon-btn.shop-btn:hover { background: color-mix(in oklch, var(--xp) 10%, var(--card)); }
+    .coin-badge {
+      position: absolute; top: -5px; right: -5px;
+      min-width: 18px; height: 18px; padding: 0 4px;
+      border-radius: 999px;
+      background: var(--xp);
+      color: var(--background);
+      font-family: var(--font-display);
+      font-size: 9px; font-weight: 800;
+      display: grid; place-items: center;
+      border: 2px solid var(--background);
+      line-height: 1; letter-spacing: -0.02em;
+    }
+    html.dark .coin-badge { color: oklch(0.2 0.03 175); }
+    @media (max-width: 420px) {
+      .icon-btn { width: 34px; height: 34px; }
+      .icon-btn > svg, .icon-btn > i { width: 14px; height: 14px; }
+      .brand h1 { font-size: 1.1rem; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    /* Level card */
+    .level-card { padding: 20px; animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    .level-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+    .level-label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--primary);
+    }
+    .level-number {
+      font-family: var(--font-display);
+      font-size: 3.75rem; font-weight: 800; line-height: 1; margin-top: 4px;
+      animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .level-total { text-align: right; }
+    .level-total .xp-total { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; color: var(--xp); }
+    .level-total .xp-next { font-size: 0.75rem; color: var(--muted-foreground); }
+    .xp-bar { margin-top: 16px; height: 12px; border-radius: 999px; background: var(--muted); overflow: hidden; }
+    .xp-bar-fill { height: 100%; border-radius: 999px; background: var(--primary); transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+    .xp-caption { margin-top: 6px; font-size: 11px; color: var(--muted-foreground); }
+
+    .ring-block {
+      margin-top: 16px; display: flex; align-items: center; gap: 12px;
+      background: color-mix(in oklch, var(--muted) 60%, transparent);
+      border-radius: 1rem; padding: 12px;
+    }
+    .ring-wrap { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+    .ring-wrap svg { width: 64px; height: 64px; transform: rotate(-90deg); }
+    .ring-value { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 0.875rem; }
+    .ring-text .ring-title { font-family: var(--font-display); font-weight: 700; font-size: 0.875rem; }
+    .ring-text .ring-caption { font-size: 0.75rem; color: var(--muted-foreground); }
+
+    /* Dashboard quick stats */
+    .dash-stats {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .dash-stat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 1rem;
+      background: color-mix(in oklch, var(--muted) 55%, transparent);
+      transition: transform 0.2s, background 0.2s;
+      text-align: left;
+      border: 0;
+      width: 100%;
+      color: inherit;
+      font: inherit;
+    }
+    .dash-stat.clickable { cursor: pointer; }
+    .dash-stat.clickable:hover { background: color-mix(in oklch, var(--badge) 10%, var(--muted) 55%); }
+    .dash-stat.clickable:active { transform: scale(0.98); }
+    .dash-stat-icon {
+      width: 34px; height: 34px;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+    .dash-stat-icon svg { width: 17px; height: 17px; }
+    .dash-stat.streak .dash-stat-icon { background: color-mix(in oklch, var(--streak) 18%, transparent); color: var(--streak); }
+    .dash-stat.badges .dash-stat-icon { background: color-mix(in oklch, var(--badge) 18%, transparent); color: var(--badge); }
+    .dash-stat-info { min-width: 0; flex: 1; }
+    .dash-stat-value {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+    .dash-stat-value .unit {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--muted-foreground);
+      margin-left: 3px;
+    }
+    .dash-stat-label {
+      margin-top: 2px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted-foreground);
+    }
+    .dash-stat-extra {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      margin-left: auto;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--freeze);
+    }
+    .dash-stat-extra svg { width: 11px; height: 11px; }
+    .dash-badge-progress {
+      margin-top: 6px;
+      height: 3px;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--badge) 20%, var(--muted));
+      overflow: hidden;
+    }
+    .dash-badge-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--badge);
+      transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Weekly recap card */
+    .week-card {
+      margin-top: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: color-mix(in oklch, var(--primary) 6%, var(--card));
+      border: 1px solid color-mix(in oklch, var(--primary) 20%, var(--border));
+      border-radius: 1.25rem;
+      box-shadow: var(--shadow-soft);
+      animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: 0.05s;
+    }
+    .week-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--primary) 15%, transparent);
+      color: var(--primary);
+    }
+    .week-icon svg { width: 20px; height: 20px; }
+    .week-content { min-width: 0; flex: 1; }
+    .week-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted-foreground);
+    }
+    .week-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .week-main {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--foreground);
+    }
+    .week-main .unit {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted-foreground);
+      margin-left: 2px;
+    }
+    .week-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: color-mix(in oklch, var(--positive) 15%, transparent);
+      color: var(--positive);
+    }
+    .week-trend.negative {
+      background: color-mix(in oklch, var(--negative) 15%, transparent);
+      color: var(--negative);
+    }
+    .week-trend svg { width: 11px; height: 11px; }
+    .week-sub {
+      font-size: 0.72rem;
+      color: var(--muted-foreground);
+      margin-top: 3px;
+    }
+    .week-sub strong {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--foreground);
+    }
+
+    .section { margin-top: 24px; }
+    .section-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; margin-bottom: 12px; }
+
+    /* Tabs + filters */
+    .tabs-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+    .tabs { display: flex; gap: 4px; padding: 4px; background: var(--muted); border-radius: 999px; }
+    .tab {
+      border: 0; background: transparent;
+      padding: 4px 12px; border-radius: 999px;
+      font-size: 0.75rem; font-weight: 700;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+    }
+    .tab:hover { color: var(--foreground); }
+    .tab.active { background: var(--card); color: var(--foreground); box-shadow: 0 1px 2px oklch(0 0 0 / 0.06); }
+    .chores-summary { font-size: 0.75rem; color: var(--muted-foreground); }
+
+    .filter-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted-foreground);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-chip:hover { color: var(--foreground); border-color: color-mix(in oklch, var(--primary) 30%, var(--border)); }
+    .filter-chip.active {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+    .filter-chip .filter-count {
+      display: inline-block;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: color-mix(in oklch, currentColor 15%, transparent);
+      font-size: 0.65rem;
+      font-weight: 800;
+      min-width: 16px;
+      text-align: center;
+    }
+    .filter-chip.active .filter-count {
+      background: color-mix(in oklch, var(--primary-foreground) 25%, transparent);
+    }
+
+    /* Chore list */
+    .chore-groups { display: flex; flex-direction: column; gap: 4px; }
+    .category-title {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--muted-foreground);
+      margin: 16px 0 8px;
+    }
+    .category-title:first-child { margin-top: 0; }
+    .category-title .cat-icon {
+      width: 13px; height: 13px;
+      color: var(--primary);
+      stroke-width: 2.5;
+      flex-shrink: 0;
+    }
+    .chore-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .chore-card {
+      position: relative;
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px;
+      border-radius: 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      transition: opacity 0.3s;
+      animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .chore-card.done { opacity: 0.6; }
+    .chore-main { min-width: 0; flex: 1; }
+    .chore-name {
+      font-family: var(--font-display);
+      font-size: 15px; font-weight: 700; line-height: 1.2;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .chore-name .chore-name-icon {
+      width: 15px; height: 15px;
+      color: var(--muted-foreground);
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+    .chore-card.done .chore-name { color: var(--muted-foreground); text-decoration: line-through; }
+    .chore-card.done .chore-name .chore-name-icon { color: var(--muted-foreground); opacity: 0.7; }
+    .chore-tags { margin-top: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 11px; }
+    .chip {
+      display: inline-block; padding: 2px 8px; border-radius: 999px;
+      font-weight: 500;
+      background: var(--secondary);
+      color: var(--secondary-foreground);
+    }
+    .chip.difficulty { font-weight: 600; text-transform: capitalize; }
+    .chip.easy { background: color-mix(in oklch, var(--easy) 15%, transparent); color: var(--easy); }
+    .chip.medium { background: color-mix(in oklch, var(--medium) 20%, transparent); color: var(--medium); }
+    .chip.hard { background: color-mix(in oklch, var(--hard) 15%, transparent); color: var(--hard); }
+    .chore-actions { position: relative; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .chore-xp { font-family: var(--font-display); font-weight: 700; font-size: 0.875rem; color: var(--xp); }
+    .chore-btn {
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      border-radius: 0.75rem;
+      border: 2px solid var(--border);
+      background: transparent;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chore-btn:hover { border-color: var(--primary); background: var(--primary); color: var(--primary-foreground); }
+    .chore-btn:active { transform: scale(0.9); }
+    .chore-btn svg { width: 20px; height: 20px; }
+    .chore-btn.ghost { border-color: transparent; border-width: 0; }
+    .chore-btn.ghost:hover { background: var(--muted); color: var(--foreground); }
+    .chore-btn.ghost.undo-hover:hover { background: color-mix(in oklch, var(--primary) 15%, transparent); color: var(--primary); }
+    .chore-btn.delete-hover:hover { background: color-mix(in oklch, var(--destructive) 15%, transparent); color: var(--destructive); }
+
+    .xp-float {
+      position: absolute; top: -24px; right: 0;
+      pointer-events: none;
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 0.875rem;
+      color: var(--xp);
+      animation: xp-float 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .xp-float.negative { color: var(--negative); }
+
+    /* ===== Badge chains ===== */
+    .chain-list { display: flex; flex-direction: column; gap: 10px; }
+    .badge-chain {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      box-shadow: var(--shadow-soft);
+      padding: 14px;
+      transition: opacity 0.2s;
+    }
+    .badge-chain.locked { opacity: 0.85; }
+    .chain-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .chain-icon {
+      width: 42px; height: 42px;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      flex-shrink: 0;
+      background: color-mix(in oklch, var(--badge) 15%, transparent);
+      color: var(--badge);
+    }
+    .chain-icon svg { width: 20px; height: 20px; }
+    .badge-chain[data-chain="streak"] .chain-icon {
+      background: color-mix(in oklch, var(--streak) 18%, transparent);
+      color: var(--streak);
+    }
+    .badge-chain[data-chain="level"] .chain-icon {
+      background: color-mix(in oklch, var(--accent) 20%, transparent);
+      color: var(--accent-foreground);
+    }
+    .badge-chain[data-chain="xp"] .chain-icon {
+      background: color-mix(in oklch, var(--xp) 15%, transparent);
+      color: var(--xp);
+    }
+    .badge-chain[data-chain="reward"] .chain-icon {
+      background: color-mix(in oklch, var(--positive) 18%, transparent);
+      color: var(--positive);
+    }
+    .chain-info { min-width: 0; flex: 1; }
+    .chain-name {
+      font-family: var(--font-display);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .chain-sub {
+      margin-top: 3px;
+      font-size: 0.72rem;
+      color: var(--muted-foreground);
+      line-height: 1.3;
+    }
+    .chain-sub strong { color: var(--foreground); font-weight: 700; }
+    .chain-count {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--badge) 15%, transparent);
+      color: var(--badge);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.75rem;
+    }
+    .badge-chain.maxed .chain-count {
+      background: color-mix(in oklch, var(--positive) 18%, transparent);
+      color: var(--positive);
+    }
+
+    .chain-bar {
+      margin-top: 12px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--muted);
+      overflow: hidden;
+    }
+    .chain-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--badge), color-mix(in oklch, var(--badge) 60%, var(--accent)));
+      transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .badge-chain[data-chain="streak"] .chain-fill {
+      background: linear-gradient(90deg, var(--streak), color-mix(in oklch, var(--streak) 60%, var(--accent)));
+    }
+    .badge-chain[data-chain="level"] .chain-fill {
+      background: linear-gradient(90deg, var(--accent), color-mix(in oklch, var(--accent) 60%, var(--primary)));
+    }
+    .badge-chain[data-chain="xp"] .chain-fill {
+      background: linear-gradient(90deg, var(--xp), color-mix(in oklch, var(--xp) 60%, var(--accent)));
+    }
+    .badge-chain[data-chain="reward"] .chain-fill {
+      background: linear-gradient(90deg, var(--positive), color-mix(in oklch, var(--positive) 60%, var(--primary)));
+    }
+
+    .chain-tiers {
+      margin-top: 10px;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .tier-dot {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--muted);
+      transition: background 0.3s;
+      position: relative;
+    }
+    .tier-dot.filled {
+      background: var(--badge);
+    }
+    .tier-dot.current {
+      background: var(--badge);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--badge) 25%, transparent);
+      animation: tier-pulse 2s ease-in-out infinite;
+    }
+    .badge-chain[data-chain="streak"] .tier-dot.filled,
+    .badge-chain[data-chain="streak"] .tier-dot.current { background: var(--streak); }
+    .badge-chain[data-chain="streak"] .tier-dot.current { box-shadow: 0 0 0 3px color-mix(in oklch, var(--streak) 25%, transparent); }
+    .badge-chain[data-chain="level"] .tier-dot.filled,
+    .badge-chain[data-chain="level"] .tier-dot.current { background: var(--accent); }
+    .badge-chain[data-chain="level"] .tier-dot.current { box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 25%, transparent); }
+    .badge-chain[data-chain="xp"] .tier-dot.filled,
+    .badge-chain[data-chain="xp"] .tier-dot.current { background: var(--xp); }
+    .badge-chain[data-chain="xp"] .tier-dot.current { box-shadow: 0 0 0 3px color-mix(in oklch, var(--xp) 25%, transparent); }
+    .badge-chain[data-chain="reward"] .tier-dot.filled,
+    .badge-chain[data-chain="reward"] .tier-dot.current { background: var(--positive); }
+    .badge-chain[data-chain="reward"] .tier-dot.current { box-shadow: 0 0 0 3px color-mix(in oklch, var(--positive) 25%, transparent); }
+
+    @keyframes tier-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+
+    .badges-summary {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+      border-radius: 1rem;
+      background: color-mix(in oklch, var(--badge) 8%, var(--muted) 40%);
+      border: 1px solid color-mix(in oklch, var(--badge) 25%, var(--border));
+    }
+    .badges-summary-icon {
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--badge) 18%, transparent);
+      color: var(--badge);
+      flex-shrink: 0;
+    }
+    .badges-summary-icon svg { width: 20px; height: 20px; }
+    .badges-summary-text { min-width: 0; flex: 1; }
+    .badges-summary-title { font-family: var(--font-display); font-size: 1rem; font-weight: 800; }
+    .badges-summary-sub { font-size: 0.72rem; color: var(--muted-foreground); margin-top: 2px; }
+    .badges-summary-bar {
+      margin-top: 8px;
+      height: 4px;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--badge) 25%, var(--muted));
+      overflow: hidden;
+    }
+    .badges-summary-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--badge);
+      transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Forms */
+    .form-card { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .field-label {
+      display: block;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+    .field-input, .field-select {
+      margin-top: 6px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 0.75rem;
+      border: 1px solid var(--input);
+      background: var(--background);
+      color: var(--foreground);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field-input:focus, .field-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 30%, transparent);
+    }
+    .btn-row { display: grid; gap: 8px; }
+    .btn-row.two { grid-template-columns: 1fr 1fr; }
+    .btn-row.three { grid-template-columns: 1fr 1fr 1fr; }
+    .btn-toggle {
+      padding: 10px;
+      border-radius: 0.75rem;
+      border: 1px solid var(--input);
+      background: var(--background);
+      color: var(--muted-foreground);
+      font-weight: 600; font-size: 0.875rem;
+      text-transform: capitalize;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-toggle.active { border-color: var(--primary); background: var(--primary); color: var(--primary-foreground); }
+    .btn-primary {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 12px;
+      border: 0; border-radius: 0.75rem;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 0.875rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-lift);
+      transition: transform 0.15s;
+    }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary svg { width: 16px; height: 16px; }
+    .btn-ghost {
+      padding: 10px 16px;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted-foreground);
+      font-weight: 700; font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .btn-outline {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 12px;
+      border-radius: 0.75rem;
+      border: 1px dashed var(--border);
+      background: transparent;
+      color: var(--muted-foreground);
+      font-weight: 700; font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-outline svg { width: 16px; height: 16px; }
+
+    /* Templates */
+    .templates-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .template-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px dashed var(--border);
+      background: transparent;
+      color: var(--muted-foreground);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .template-chip:hover {
+      border-color: var(--primary);
+      border-style: solid;
+      color: var(--primary);
+      background: color-mix(in oklch, var(--primary) 8%, transparent);
+    }
+    .template-chip:active { transform: scale(0.97); }
+    .template-chip svg { width: 12px; height: 12px; }
+
+    /* Reward shop */
+    .reward-list { display: flex; flex-direction: column; gap: 10px; }
+    .reward-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px;
+      border-radius: 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      transition: opacity 0.2s;
+    }
+    .reward-card.locked { opacity: 0.7; }
+    .reward-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--xp) 15%, transparent);
+      color: var(--xp);
+    }
+    .reward-card.locked .reward-icon { background: var(--muted); color: var(--muted-foreground); }
+    .reward-icon svg { width: 20px; height: 20px; }
+    .reward-main { min-width: 0; flex: 1; }
+    .reward-name { font-size: 0.875rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .reward-cost { font-size: 0.75rem; color: var(--muted-foreground); }
+    .reward-delete {
+      width: 32px; height: 32px;
+      display: grid; place-items: center;
+      border: 0; background: transparent;
+      border-radius: 999px;
+      color: var(--muted-foreground);
+      cursor: pointer; flex-shrink: 0;
+    }
+    .reward-delete:hover { color: var(--destructive); }
+    .reward-delete svg { width: 16px; height: 16px; }
+    .reward-claim {
+      padding: 8px 14px;
+      border: 0; border-radius: 999px;
+      font-size: 0.75rem; font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      box-shadow: var(--shadow-soft);
+      flex-shrink: 0;
+    }
+    .reward-claim:active { transform: scale(0.95); }
+    .reward-claim:disabled { background: var(--muted); color: var(--muted-foreground); cursor: not-allowed; box-shadow: none; }
+    .icon-picker { display: flex; flex-wrap: wrap; gap: 8px; }
+    .icon-pick {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted-foreground);
+      cursor: pointer;
+    }
+    .icon-pick svg { width: 16px; height: 16px; }
+    .icon-pick.active { border-color: var(--primary); background: color-mix(in oklch, var(--primary) 15%, transparent); color: var(--primary); }
+    .redeemed-title {
+      margin-top: 16px; margin-bottom: 8px;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+    .redeemed-list { display: flex; flex-direction: column; gap: 6px; }
+    .redeemed-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 8px 12px;
+      border-radius: 0.75rem;
+      background: color-mix(in oklch, var(--muted) 50%, transparent);
+      font-size: 0.75rem;
+    }
+    .redeemed-row .muted { color: var(--muted-foreground); }
+
+    .empty {
+      padding: 24px; text-align: center;
+      font-size: 0.875rem; color: var(--muted-foreground);
+      border-radius: 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+    }
+    .empty-icon {
+      width: 44px; height: 44px;
+      margin: 0 auto 10px;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      background: var(--muted);
+      color: var(--muted-foreground);
+    }
+    .empty-icon svg { width: 22px; height: 22px; }
+
+    /* Bottom sheets */
+    .sheet-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: oklch(0 0 0 / 0.55);
+      backdrop-filter: blur(2px);
+      display: flex; align-items: flex-end; justify-content: center;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .sheet {
+      width: 100%; max-width: 460px; max-height: 88vh;
+      background: var(--background);
+      border-radius: 1.75rem 1.75rem 0 0;
+      box-shadow: var(--shadow-sheet);
+      display: flex; flex-direction: column;
+      animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+    .sheet-grabber { width: 40px; height: 5px; background: var(--border); border-radius: 999px; margin: 10px auto 0; flex-shrink: 0; }
+    .sheet-header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 14px 20px 12px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .sheet-header h2 { font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; }
+    .sheet-count {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 999px;
+      background: color-mix(in oklch, var(--badge) 15%, transparent);
+      color: var(--badge);
+      font-family: var(--font-display); font-weight: 800; font-size: 0.875rem;
+    }
+    .sheet-count svg { width: 16px; height: 16px; }
+    .sheet-coins {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 999px;
+      background: color-mix(in oklch, var(--xp) 15%, transparent);
+      color: var(--xp);
+      font-family: var(--font-display); font-weight: 800; font-size: 0.875rem;
+    }
+    .sheet-coins svg { width: 16px; height: 16px; }
+    .sheet-close {
+      width: 34px; height: 34px;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted-foreground);
+      cursor: pointer; transition: color 0.15s; flex-shrink: 0;
+    }
+    .sheet-close:hover { color: var(--foreground); }
+    .sheet-close svg { width: 16px; height: 16px; }
+    .sheet-body { padding: 16px 20px 28px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-card {
+      background: color-mix(in oklch, var(--muted) 50%, var(--card));
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-value { font-family: var(--font-display); font-size: 1.75rem; font-weight: 800; line-height: 1; color: var(--primary); }
+    .stat-label { margin-top: 4px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-foreground); font-weight: 600; }
+    .stats-subtitle {
+      font-family: var(--font-display);
+      font-size: 0.75rem; font-weight: 700;
+      margin: 22px 0 10px;
+      color: var(--muted-foreground);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .chart {
+      display: flex; align-items: flex-end;
+      gap: 4px; height: 110px;
+      padding: 8px 0 0;
+    }
+    .chart-col {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 4px;
+      height: 100%; justify-content: flex-end;
+      min-width: 0;
+    }
+    .chart-bar {
+      width: 100%;
+      background: linear-gradient(to top, var(--primary), color-mix(in oklch, var(--primary) 65%, var(--accent)));
+      border-radius: 4px 4px 2px 2px;
+      min-height: 3px;
+      transition: height 0.4s;
+    }
+    .chart-bar.empty { background: var(--muted); }
+    .chart-label { font-size: 9px; color: var(--muted-foreground); font-weight: 600; }
+    .chart-label.today { color: var(--primary); font-weight: 800; }
+    .highlight-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 14px; border-radius: 0.75rem;
+      background: color-mix(in oklch, var(--muted) 40%, transparent);
+      font-size: 0.8125rem; margin-bottom: 6px;
+    }
+    .highlight-row strong { font-family: var(--font-display); font-weight: 700; }
+
+    /* Level-up modal */
+    .levelup-overlay {
+      position: fixed; inset: 0; z-index: 250;
+      background: oklch(0 0 0 / 0.7);
+      backdrop-filter: blur(6px);
+      display: grid; place-items: center;
+      padding: 20px;
+      animation: fadeIn 0.25s;
+      cursor: pointer;
+    }
+    .levelup-card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid color-mix(in oklch, var(--primary) 40%, var(--border));
+      border-radius: 2rem;
+      padding: 40px 28px 32px;
+      max-width: 340px; width: 100%;
+      text-align: center;
+      box-shadow: 0 30px 60px oklch(0 0 0 / 0.4);
+      animation: levelupPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: default;
+      overflow: hidden;
+    }
+    .levelup-card::before {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background: radial-gradient(circle, color-mix(in oklch, var(--primary) 30%, transparent) 0%, transparent 60%);
+      animation: levelupGlow 2.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .levelup-content { position: relative; z-index: 1; }
+    .levelup-crown {
+      width: 44px; height: 44px;
+      margin: 0 auto 8px;
+      color: var(--accent);
+      stroke-width: 2;
+      filter: drop-shadow(0 4px 12px color-mix(in oklch, var(--accent) 50%, transparent));
+      animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .levelup-label {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--primary);
+    }
+    .levelup-number {
+      font-family: var(--font-display);
+      font-size: 5rem; font-weight: 800; line-height: 1;
+      margin: 6px 0 4px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .levelup-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem; font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .levelup-rewards {
+      display: flex; justify-content: center; gap: 8px;
+      flex-wrap: wrap; margin-bottom: 24px;
+    }
+    .levelup-rewards span {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 6px 12px; border-radius: 999px;
+      background: color-mix(in oklch, var(--xp) 15%, transparent);
+      color: var(--xp);
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 0.8125rem;
+    }
+    .levelup-rewards span svg { width: 14px; height: 14px; }
+    @keyframes levelupPop {
+      0% { transform: scale(0.4) translateY(30px); opacity: 0; }
+      60% { transform: scale(1.05) translateY(0); opacity: 1; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    @keyframes levelupGlow {
+      0%, 100% { transform: scale(1); opacity: 0.55; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed; left: 50%; bottom: 24px;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 0.875rem;
+      padding: 12px 18px; border-radius: 999px;
+      box-shadow: var(--shadow-lift);
+      z-index: 200;
+      animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: calc(100% - 32px);
+      text-align: center;
+    }
+    .toast > svg, .toast > i {
+      width: 16px; height: 16px;
+      flex-shrink: 0;
+    }
+    .toast[hidden] { display: none; }
+
+    /* Undo toast (delete only now) */
+    .toast-undo {
+      position: fixed; left: 50%; bottom: 24px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--foreground);
+      color: var(--background);
+      font-size: 0.8125rem;
+      padding: 10px 10px 10px 18px;
+      border-radius: 999px;
+      box-shadow: var(--shadow-lift);
+      z-index: 260;
+      animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: calc(100% - 32px);
+    }
+    .toast-undo[hidden] { display: none; }
+    .toast-undo-text {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .toast-undo-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.15s;
+      flex-shrink: 0;
+    }
+    .toast-undo-btn:hover { background: color-mix(in oklch, var(--primary) 90%, white); }
+    .toast-undo-btn:active { transform: scale(0.95); }
+    .toast-undo-btn svg { width: 12px; height: 12px; }
+
+    /* Animations */
+    @keyframes xp-float {
+      0% { opacity: 0; transform: translateY(6px) scale(0.85); }
+      25% { opacity: 1; transform: translateY(-4px) scale(1.08); }
+      100% { opacity: 0; transform: translateY(-34px) scale(1); }
+    }
+    @keyframes pop {
+      0% { transform: scale(0.85); }
+      60% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" id="app"></main>
+  <div id="sheet-root"></div>
+  <div id="modal-root"></div>
+  <div class="toast" id="toast" hidden></div>
+  <div class="toast-undo" id="toast-undo" hidden>
+    <span class="toast-undo-text" id="toast-undo-text"></span>
+    <button class="toast-undo-btn" id="toast-undo-btn" type="button">
+      <i data-lucide="undo-2"></i><span>Undo</span>
+    </button>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>
+  (function () {
+    "use strict";
+
+    const STORAGE_KEY = "chorequest.state.v1";
+    const THEME_KEY = "chorequest.theme";
+    const NOTIF_KEY = "chorequest.notif.v1";
+
+    const CATEGORIES = ["Kitchen", "Bathroom", "Bedroom", "Living room", "Laundry", "Outdoors", "Admin"];
+
+    const CATEGORY_ICON = {
+      "Kitchen": "chef-hat",
+      "Bathroom": "droplets",
+      "Bedroom": "bed-double",
+      "Living room": "sofa",
+      "Laundry": "washing-machine",
+      "Outdoors": "trees",
+      "Admin": "clipboard-list",
+    };
+    const catIcon = (c) => CATEGORY_ICON[c] || "home";
+
+    const DIFFICULTY_XP = { easy: 20, medium: 35, hard: 50 };
+    const REWARD_ICONS = ["gift", "coffee", "pizza", "tv", "gamepad", "bath", "music", "star"];
+
+    // Quick-add templates
+    const CHORE_TEMPLATES = [
+      { name: "Clean bathroom",     category: "Bathroom",    difficulty: "hard" },
+      { name: "Vacuum floors",      category: "Living room", difficulty: "easy" },
+      { name: "Fold laundry",       category: "Laundry",     difficulty: "medium" },
+      { name: "Wash dishes",        category: "Kitchen",     difficulty: "easy" },
+      { name: "Take out trash",     category: "Kitchen",     difficulty: "easy" },
+      { name: "Change bed sheets",  category: "Bedroom",     difficulty: "medium" },
+      { name: "Water the plants",   category: "Outdoors",    difficulty: "easy" },
+      { name: "Pay bills",          category: "Admin",       difficulty: "medium" },
+    ];
+
+    const LEVEL_TITLES = [
+      "Newcomer", "Rookie", "Tidy Apprentice", "Dust Slayer",
+      "Room Ranger", "Home Hero", "Chore Champion", "Grandmaster of Clean",
+      "Household Legend", "Domestic Deity", "Order Incarnate",
+      "Pristine Sage", "Crystal Sovereign", "Eternal Tidiness", "Chorequest Immortal",
+    ];
+
+    /* ============================================================
+       Badge chains — progressive tiers per theme
+       ============================================================ */
+    const BADGE_CHAINS = [
+      {
+        id: "streak",
+        name: "Streak Keeper",
+        icon: "flame",
+        tiers: [
+          { threshold: 3,   name: "Kindling",       hint: "3-day streak" },
+          { threshold: 7,   name: "Week Warrior",   hint: "7-day streak" },
+          { threshold: 14,  name: "Fortnight Fire", hint: "14-day streak" },
+          { threshold: 30,  name: "Monthly Blaze",  hint: "30-day streak" },
+          { threshold: 100, name: "Century Flame",  hint: "100-day streak" },
+          { threshold: 365, name: "Eternal Flame",  hint: "365-day streak" },
+        ],
+        getValue: (s) => s.bestStreak,
+        formatValue: (v) => `${v} day${v === 1 ? "" : "s"}`,
+      },
+      {
+        id: "completion",
+        name: "Chore Crusher",
+        icon: "zap",
+        tiers: [
+          { threshold: 1,   name: "First Sweep",   hint: "Complete 1 chore" },
+          { threshold: 10,  name: "On a Roll",     hint: "Complete 10 chores" },
+          { threshold: 25,  name: "Chore Machine", hint: "Complete 25 chores" },
+          { threshold: 50,  name: "Unstoppable",   hint: "Complete 50 chores" },
+          { threshold: 100, name: "Centurion",     hint: "Complete 100 chores" },
+          { threshold: 250, name: "Chore Legend",  hint: "Complete 250 chores" },
+        ],
+        getValue: (s) => s.completedCount,
+        formatValue: (v) => `${v} chore${v === 1 ? "" : "s"}`,
+      },
+      {
+        id: "level",
+        name: "Level Climber",
+        icon: "trophy",
+        tiers: [
+          { threshold: 5,  name: "High Five",       hint: "Reach level 5" },
+          { threshold: 10, name: "Double Digits",   hint: "Reach level 10" },
+          { threshold: 25, name: "Quarter Century", hint: "Reach level 25" },
+          { threshold: 50, name: "Legendary",       hint: "Reach level 50" },
+        ],
+        getValue: (s) => levelInfo(s.totalXp).level,
+        formatValue: (v) => `Level ${v}`,
+      },
+      {
+        id: "xp",
+        name: "XP Collector",
+        icon: "gem",
+        tiers: [
+          { threshold: 1000,  name: "XP Hoarder",  hint: "Earn 1,000 XP" },
+          { threshold: 5000,  name: "XP Tycoon",   hint: "Earn 5,000 XP" },
+          { threshold: 10000, name: "XP Magnate",  hint: "Earn 10,000 XP" },
+          { threshold: 25000, name: "XP Overlord", hint: "Earn 25,000 XP" },
+        ],
+        getValue: (s) => s.totalXp,
+        formatValue: (v) => `${v.toLocaleString()} XP`,
+      },
+      {
+        id: "reward",
+        name: "Self-Care",
+        icon: "gift",
+        tiers: [
+          { threshold: 1,  name: "First Treat",    hint: "Claim a reward" },
+          { threshold: 5,  name: "Treat Yourself", hint: "Claim 5 rewards" },
+          { threshold: 10, name: "Self-Care Pro",  hint: "Claim 10 rewards" },
+          { threshold: 25, name: "Pampered",       hint: "Claim 25 rewards" },
+        ],
+        getValue: (s) => s.rewardsClaimed,
+        formatValue: (v) => `${v} reward${v === 1 ? "" : "s"}`,
+      },
+      {
+        id: "perfect",
+        name: "Perfect Weeks",
+        icon: "badge-check",
+        tiers: [
+          { threshold: 1,  name: "Perfect Week",      hint: "Clear all weekly chores" },
+          { threshold: 4,  name: "Monthly Perfection",hint: "4 perfect weeks" },
+          { threshold: 12, name: "Quarterly Mastery", hint: "12 perfect weeks" },
+          { threshold: 52, name: "Yearly Perfection", hint: "52 perfect weeks" },
+        ],
+        getValue: (s) => s.perfectWeeks || 0,
+        formatValue: (v) => `${v} week${v === 1 ? "" : "s"}`,
+      },
+    ];
+
+    const REWARD_ICON_MAP = {
+      gift: "gift", coffee: "coffee", pizza: "pizza", tv: "tv",
+      gamepad: "gamepad-2", bath: "bath", music: "music", star: "star",
+    };
+
+    /* Helpers */
+    const dayKey = (d = new Date()) => d.toISOString().slice(0, 10);
+
+    const weekKey = (d = new Date()) => {
+      const day = new Date(d);
+      day.setDate(day.getDate() - day.getDay());
+      return dayKey(day);
+    };
+
+    const dateKeyOffset = (offset) => {
+      const d = new Date();
+      d.setDate(d.getDate() + offset);
+      return dayKey(d);
+    };
+
+    function levelInfo(totalXp) {
+      let level = 0, remaining = totalXp, need = 100;
+      while (remaining >= need) {
+        remaining -= need;
+        level += 1;
+        need = 100 * (level + 1);
+      }
+      return {
+        level,
+        xpIntoLevel: remaining,
+        xpForLevel: need,
+        progress: Math.min(100, Math.round((remaining / need) * 100)),
+        xpToNext: need - remaining,
+      };
+    }
+
+    const levelTitle = (level) => LEVEL_TITLES[Math.min(level, LEVEL_TITLES.length - 1)];
+    const coinsForChore = (xp) => Math.max(1, Math.round(xp / 10));
+    const coinsForLevel = (level) => 5 + level * 2;
+    const coinsForStreak = (streak) => (streak > 0 && streak % 3 === 0 ? streak : 0);
+
+    function nextStreak(state) {
+      const today = dayKey();
+      if (state.lastCompletedDay === today) {
+        return { streak: state.streak, bestStreak: state.bestStreak, freezeUsed: false, freezesToSpend: 0 };
+      }
+      if (!state.lastCompletedDay) {
+        return { streak: 1, bestStreak: Math.max(1, state.bestStreak), freezeUsed: false, freezesToSpend: 0 };
+      }
+      const yesterdayKey = dateKeyOffset(-1);
+      if (state.lastCompletedDay === yesterdayKey) {
+        const streak = state.streak + 1;
+        return { streak, bestStreak: Math.max(streak, state.bestStreak), freezeUsed: false, freezesToSpend: 0 };
+      }
+      const twoDaysAgoKey = dateKeyOffset(-2);
+      if (state.lastCompletedDay === twoDaysAgoKey && state.streak > 0 && state.freezes > 0) {
+        const streak = state.streak + 1;
+        return { streak, bestStreak: Math.max(streak, state.bestStreak), freezeUsed: true, freezesToSpend: 1 };
+      }
+      return { streak: 1, bestStreak: Math.max(1, state.bestStreak), freezeUsed: false, freezesToSpend: 0 };
+    }
+
+    function applyWeeklyReset(state) {
+      const current = weekKey();
+      if (state.lastResetWeek === current) return state;
+      const weekly = state.chores.filter((c) => c.frequency === "weekly");
+      const allDone = weekly.length > 0 && weekly.every((c) => c.completedAt);
+      return {
+        ...state,
+        lastResetWeek: current,
+        chores: state.chores.map((c) => ({ ...c, completedAt: null })),
+        freezes: 1,
+        perfectWeeks: (state.perfectWeeks || 0) + (allDone ? 1 : 0),
+      };
+    }
+
+    function uid() {
+      if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+      return "id-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    }
+
+    /* ===== Chain progress helpers ===== */
+    function chainProgress(chain) {
+      const value = chain.getValue(state);
+      const tiers = chain.tiers;
+      let unlockedCount = 0;
+      for (const t of tiers) {
+        if (value >= t.threshold) unlockedCount++;
+      }
+      const totalTiers = tiers.length;
+      const isMaxed = unlockedCount >= totalTiers;
+      const nextTier = isMaxed ? null : tiers[unlockedCount];
+      const currentTier = unlockedCount > 0 ? tiers[unlockedCount - 1] : null;
+
+      let progressPct = 0;
+      if (isMaxed) {
+        progressPct = 100;
+      } else if (currentTier) {
+        const from = currentTier.threshold;
+        const to = nextTier.threshold;
+        progressPct = Math.min(100, Math.max(0, ((value - from) / (to - from)) * 100));
+      } else {
+        progressPct = Math.min(100, (value / nextTier.threshold) * 100);
       }
 
-      body {
-        font-family: 'Inter', Helvetica, Arial, sans-serif;
-        background: light-dark(#F8F8F7, #191919);
-        color: light-dark(#1f1f1f, #e3e3e3);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        min-height: 100vh;
-        margin: 0;
-        padding: 20px;
-        text-align: center;
+      return { value, unlockedCount, totalTiers, isMaxed, nextTier, currentTier, progressPct };
+    }
+
+    function countUnlockedTiers() {
+      return BADGE_CHAINS.reduce((sum, chain) => sum + chainProgress(chain).unlockedCount, 0);
+    }
+
+    function countTotalTiers() {
+      return BADGE_CHAINS.reduce((sum, chain) => sum + chain.tiers.length, 0);
+    }
+
+    /* Weekly stats */
+    function weekStats() {
+      const now = new Date();
+      const wkStart = weekKey(now);
+      const today = dayKey(now);
+
+      let xp = 0, chores = 0;
+      for (const [k, v] of Object.entries(state.xpLog || {})) {
+        if (k >= wkStart && k <= today) xp += v;
+      }
+      for (const [k, v] of Object.entries(state.completionsLog || {})) {
+        if (k >= wkStart && k <= today) chores += v;
       }
 
-      .container {
-        background: light-dark(#FFFFFF, #1F1F1F);
-        padding: 32px;
-        border-radius: 16px;
-        border: 1px solid light-dark(#E2E3E4, #3E3E3E);
-        max-width: min(80%, 500px);
-        width: 100%;
-        color: light-dark(#2B2D31, #D4D4D4);
+      const lastWeekEnd = new Date(wkStart + "T00:00:00");
+      lastWeekEnd.setDate(lastWeekEnd.getDate() - 1);
+      const lwEnd = dayKey(lastWeekEnd);
+      const lwStartDate = new Date(lastWeekEnd);
+      lwStartDate.setDate(lwStartDate.getDate() - 6);
+      const lwStart = dayKey(lwStartDate);
+
+      let lastXp = 0;
+      for (const [k, v] of Object.entries(state.xpLog || {})) {
+        if (k >= lwStart && k <= lwEnd) lastXp += v;
       }
 
-      h1 {
-        font-size: 20px;
-        font-weight: 500;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        color: light-dark(#2B2D31, #D4D4D4);
-      }
+      const trend = lastXp > 0 ? Math.round(((xp - lastXp) / lastXp) * 100) : (xp > 0 ? 100 : null);
 
-      p {
-        font-size: 14px;
-        color: light-dark(#2B2D31, #D4D4D4);
-        line-height: 21px;
-        margin: 0 0 1.5rem 0;
-      }
+      return { xp, chores, lastXp, trend };
+    }
 
-      .icon {
-        margin-bottom: 1rem;
-        line-height: 0;
-      }
+    /* State */
+    function initialState() {
+      return {
+        chores: [
+          { id: "c1", name: "Clean bathroom",        category: "Bathroom",    frequency: "weekly",  difficulty: "hard",   xp: 50, completedAt: null },
+          { id: "c2", name: "Vacuum living room",    category: "Living room", frequency: "weekly",  difficulty: "easy",   xp: 20, completedAt: null },
+          { id: "c3", name: "Fold the laundry",      category: "Laundry",     frequency: "weekly",  difficulty: "medium", xp: 35, completedAt: null },
+          { id: "c4", name: "Deep clean the fridge", category: "Kitchen",     frequency: "monthly", difficulty: "hard",   xp: 50, completedAt: null },
+          { id: "c5", name: "Wash the windows",      category: "Outdoors",    frequency: "monthly", difficulty: "medium", xp: 35, completedAt: null },
+        ],
+        totalXp: 0,
+        streak: 0,
+        bestStreak: 0,
+        lastCompletedDay: null,
+        completedCount: 0,
+        lastResetWeek: null,
+        coins: 0,
+        rewards: [
+          { id: "r1", name: "Coffee at the café", cost: 15, icon: "coffee" },
+          { id: "r2", name: "Movie night",        cost: 30, icon: "tv" },
+          { id: "r3", name: "Pizza takeaway",     cost: 45, icon: "pizza" },
+          { id: "r4", name: "Long hot bath",      cost: 20, icon: "bath" },
+          { id: "r5", name: "1h gaming session",  cost: 25, icon: "gamepad" },
+        ],
+        redeemed: [],
+        xpLog: {},
+        completionsLog: {},
+        dailySnapshots: {},
+        freezes: 1,
+        perfectWeeks: 0,
+        rewardsClaimed: 0,
+      };
+    }
 
-      .button-container {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 2rem;
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return initialState();
+        const parsed = JSON.parse(raw);
+        return { ...initialState(), ...parsed };
+      } catch {
+        return initialState();
       }
+    }
 
-      button {
-        background-color: light-dark(#fff, #323232);
-        color: light-dark(#2B2D31, #FCFCFC);
-        border: 1px solid light-dark(#E2E3E4, #3E3E3E);
-        border-radius: 12px;
-        padding: 8px 12px;
-        font-size: 14px;
-        line-height: 21px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        font-weight: 400;
-        font-family: 'Inter', Helvetica, Arial, sans-serif;
-        width: 100%;
-      }
+    function saveState(s) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch {}
+    }
 
-      button:hover {
-        background-color: light-dark(#EAEAEB, #424242);
-      }
+    let state = applyWeeklyReset(loadState());
 
-      .hidden {
-        display: none;
-      }
+    const ui = {
+      dark: false,
+      tab: "weekly",
+      choreFilter: "all",
+      burstId: null,
+      undoBurstId: null,
+      shopOpen: false,
+      statsOpen: false,
+      badgesOpen: false,
+      rewardFormOpen: false,
+      rewardDraft: { name: "", cost: 20, icon: "gift" },
+      levelUpModal: null,
+    };
 
-      /* Loading Spinner Animation */
-      .spinner {
-        margin: 0 auto 1.5rem auto;
-        width: 40px;
-        height: 40px;
-        border: 4px solid light-dark(#f0f0f0, #262626);
-        border-top: 4px solid light-dark(#076eff, #87a9ff); /* Blue color */
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
+    const notifPrefs = { enabled: false, lastReminderDay: null };
+    try {
+      const raw = localStorage.getItem(NOTIF_KEY);
+      if (raw) Object.assign(notifPrefs, JSON.parse(raw));
+    } catch {}
+    function saveNotifPrefs() {
+      try { localStorage.setItem(NOTIF_KEY, JSON.stringify(notifPrefs)); } catch {}
+    }
 
-      .logo {
-        border-radius: 10px;
-        display: block;
-        margin: 0 auto 2rem auto;
-      }
+    const choreDraft = {
+      name: "",
+      category: CATEGORIES[0],
+      frequency: "weekly",
+      difficulty: "medium",
+      xp: DIFFICULTY_XP.medium,
+    };
 
-      .logo.hidden {
-        display: none;
-      }
+    let toastTimer = null;
+    let undoTimer = null;
+    let reminderTimer = null;
+    let levelUpToken = 0;
+    let pendingUndo = null; // delete-only now
 
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
+    /* DOM */
+    const app = document.getElementById("app");
+    const sheetRoot = document.getElementById("sheet-root");
+    const modalRoot = document.getElementById("modal-root");
+    const toastEl = document.getElementById("toast");
+    const undoToastEl = document.getElementById("toast-undo");
+    const undoToastText = document.getElementById("toast-undo-text");
+    const undoBtn = document.getElementById("toast-undo-btn");
+
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const icon = (name, cls = "") => `<i data-lucide="${name}" class="${cls}"></i>`;
+
+    /* Haptic */
+    function haptic(pattern = 15) {
+      try { navigator.vibrate?.(pattern); } catch {}
+    }
+
+    /* Confetti */
+    function fireConfetti() {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:300;";
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext("2d");
+        const colors = ["#f59e0b", "#10b981", "#3b82f6", "#ec4899", "#8b5cf6", "#f43f5e", "#14b8a6"];
+        const particles = [];
+        const cx = canvas.width / 2;
+        const cy = canvas.height * 0.35;
+        for (let i = 0; i < 140; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = (4 + Math.random() * 11) * dpr;
+          particles.push({
+            x: cx, y: cy,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 4 * dpr,
+            size: (4 + Math.random() * 7) * dpr,
+            color: colors[(Math.random() * colors.length) | 0],
+            rot: Math.random() * Math.PI,
+            vr: (Math.random() - 0.5) * 0.35,
+          });
         }
-        100% {
-          transform: rotate(360deg);
+        const start = performance.now();
+        const DURATION = 2200;
+        function frame(t) {
+          const p = Math.min(1, (t - start) / DURATION);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          for (const pt of particles) {
+            pt.vy += 0.4 * dpr;
+            pt.x += pt.vx;
+            pt.y += pt.vy;
+            pt.vx *= 0.99;
+            pt.rot += pt.vr;
+            ctx.save();
+            ctx.globalAlpha = 1 - p;
+            ctx.translate(pt.x, pt.y);
+            ctx.rotate(pt.rot);
+            ctx.fillStyle = pt.color;
+            ctx.fillRect(-pt.size / 2, -pt.size / 2, pt.size, pt.size * 0.6);
+            ctx.restore();
+          }
+          if (p < 1) requestAnimationFrame(frame);
+          else canvas.remove();
         }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <img
-        class="logo"
-        src="https://www.gstatic.com/images/branding/productlogos/ai_studio/v1/web-512dp/logo_ai_studio_color_1x_web_512dp.png"
-        alt="AI Studio Logo"
-        width="256"
-        height="256"
-      />
-      <div class="spinner"></div>
-      <div id="error-ui" class="hidden">
-        <div class="icon">
-          <svg
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="48px"
-            height="48px"
-            fill="#D73A49"
-          >
-            <path
-              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M13,17h-2v-2h2V17z M13,13h-2V7h2V13z"
-            />
-          </svg>
-        </div>
-        <div id="stepOne" class="text-container">
-          <h1>Action required to load your app</h1>
-          <p>
-            It looks like your browser is blocking a required security cookie, which is common on
-            older versions of iOS and Safari.
-          </p>
-          <div class="button-container">
-            <button id="authInSeparateWindowButton" onclick="redirectToReturnUrl(true)">Authenticate in new window</button>
-          </div>
-        </div>
-        <div id="stepTwo" class="text-container hidden">
-          <h1>Action required to load your app</h1>
-          <p>
-            It looks like your browser is blocking a required security cookie, which is common on
-            older versions of iOS and Safari.
-          </p>
-          <div class="button-container">
-            <button id="interactButton" onclick="redirectToReturnUrl(false)">Close and continue</button>
-          </div>
-        </div>
-        <div id="stepThree" class="text-container hidden">
-          <h1>Almost there!</h1>
-          <p>
-            Grant permission for the required security cookie below.
-          </p>
-          <div class="button-container">
-            <button id="grantPermissionButton" onclick="grantStorageAccess()">Grant permission</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <script>
-      const AUTH_FLOW_TEST_COOKIE_NAME = '__SECURE-aistudio_auth_flow_may_set_cookies';
-      const COOKIE_VALUE = 'true';
+        requestAnimationFrame(frame);
+      } catch {}
+    }
 
-      function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          let cookie = cookies[i].trim();
-          if (cookie.startsWith(name + '=')) {
-            return cookie.substring(name.length + 1);
+    /* Notifications */
+    const notifSupported = typeof window !== "undefined" && "Notification" in window;
+    const notifPermission = () => notifSupported ? Notification.permission : "unsupported";
+    const notifActive = () => notifSupported && Notification.permission === "granted" && notifPrefs.enabled;
+
+    function notify(title, options = {}) {
+      if (!notifActive()) return null;
+      try {
+        const n = new Notification(title, {
+          body: options.body || "",
+          tag: options.tag || "chorequest",
+          icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2340a88b'/%3E%3Ctext x='32' y='42' font-size='34' font-family='sans-serif' font-weight='800' text-anchor='middle' fill='white'%3EC%3C/text%3E%3C/svg%3E",
+          badge: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2340a88b'/%3E%3C/svg%3E",
+          silent: options.silent === true,
+        });
+        n.onclick = () => { try { window.focus(); n.close(); } catch {} };
+        return n;
+      } catch { return null; }
+    }
+
+    async function requestNotificationPermission() {
+      if (!notifSupported) { showToast("Notifications aren't supported in this browser.", "bell-off"); return "unsupported"; }
+      let perm = Notification.permission;
+      if (perm !== "granted" && perm !== "denied") {
+        try { perm = await Notification.requestPermission(); } catch { perm = Notification.permission; }
+      }
+      if (perm === "granted") {
+        notifPrefs.enabled = true;
+        saveNotifPrefs();
+        notify("Reminders are on", { body: "We'll send you a gentle nudge to keep your streak alive.", tag: "chorequest-welcome" });
+        showToast("Reminders enabled", "bell-ring");
+        setTimeout(maybeDailyReminder, 800);
+      } else if (perm === "denied") {
+        notifPrefs.enabled = false;
+        saveNotifPrefs();
+        showToast("Notifications blocked in browser settings.", "bell-off");
+      }
+      render();
+      return perm;
+    }
+
+    function disableNotifications() {
+      notifPrefs.enabled = false;
+      saveNotifPrefs();
+      showToast("Reminders turned off.", "bell-off");
+      render();
+    }
+
+    /* ============================================================
+       Soft, streak-focused reminders
+       ============================================================ */
+    function maybeDailyReminder() {
+      if (!notifActive()) return;
+      const today = dayKey();
+      if (notifPrefs.lastReminderDay === today) return;
+
+      const pending = state.chores.filter((c) => !c.completedAt);
+      if (pending.length === 0) return;
+
+      const pendingCount = pending.length;
+      const choreWord = pendingCount > 1 ? "chores" : "chore";
+      const hasStreak = state.streak > 0;
+      const streakDays = state.streak;
+      const day = new Date().getDay();
+      const isWeekend = day === 6 || day === 0;
+      const isFriday = day === 5;
+
+      let title, body;
+
+      if (isWeekend) {
+        title = "Last chance before reset";
+        body = `${pendingCount} ${choreWord} left before Sunday's reset.`;
+      } else if (isFriday) {
+        title = hasStreak ? `🔥 ${streakDays}-day streak` : "Weekend is near";
+        body = hasStreak
+          ? `${pendingCount} ${choreWord} left to keep your ${streakDays}-day streak alive.`
+          : `${pendingCount} ${choreWord} to tackle — start a new streak this weekend!`;
+      } else if (hasStreak) {
+        const softVariations = [
+          `You have ${pendingCount} ${choreWord} left to maintain your streak.`,
+          `Just ${pendingCount} ${choreWord} to keep your ${streakDays}-day chain going!`,
+          `A little progress goes a long way — ${pendingCount} ${choreWord} to go.`,
+          `Your ${streakDays}-day streak is waiting — ${pendingCount} ${choreWord} left.`,
+          `Keep the momentum — ${pendingCount} ${choreWord} to finish today.`,
+          `${pendingCount} ${choreWord} away from another day of progress.`,
+          `Small steps, big streak — ${pendingCount} ${choreWord} left.`,
+        ];
+        title = `🔥 ${streakDays}-day streak`;
+        body = softVariations[day % softVariations.length];
+      } else {
+        const freshStartVariations = [
+          `Ready to begin? ${pendingCount} ${choreWord} to tackle.`,
+          `A fresh start awaits — ${pendingCount} ${choreWord} to do.`,
+          `${pendingCount} ${choreWord} waiting for you today.`,
+          `Start your first streak — ${pendingCount} ${choreWord} to go.`,
+        ];
+        title = "Chorequest reminder";
+        body = freshStartVariations[day % freshStartVariations.length];
+      }
+
+      notify(title, { body, tag: "chorequest-reminder" });
+      notifPrefs.lastReminderDay = today;
+      saveNotifPrefs();
+    }
+
+    function notifyMilestone({ afterLevel, beforeLevel, levelUpBonus, levelCoins, streakBonus, streak, choreName, choreXp }) {
+      if (!notifActive()) return;
+      if (afterLevel > beforeLevel) {
+        notify(`Level ${afterLevel} — ${levelTitle(afterLevel)}`, {
+          body: `${choreName} completed (+${choreXp} XP, +${levelUpBonus} bonus). +${levelCoins} coins.`,
+          tag: "chorequest-level",
+        });
+      } else if (streakBonus > 0) {
+        notify(`${streak}-day streak`, { body: `+${streakBonus} bonus coins. Keep it going!`, tag: "chorequest-streak" });
+      }
+    }
+
+    function notifyWeeklyReset(count) {
+      if (!notifActive() || count <= 0) return;
+      notify("New week — chores reset", {
+        body: `${count} chore${count > 1 ? "s" : ""} ready for a fresh start. Keep your streak alive!`,
+        tag: "chorequest-reset",
+      });
+    }
+
+    /* Render */
+    function render() {
+      const focusId = document.activeElement?.id || null;
+      const selStart = document.activeElement?.selectionStart ?? null;
+      const selEnd = document.activeElement?.selectionEnd ?? null;
+
+      app.innerHTML = buildApp();
+
+      let sheetHtml = "";
+      if (ui.shopOpen) sheetHtml = buildShopSheet();
+      else if (ui.statsOpen) sheetHtml = buildStatsSheet();
+      else if (ui.badgesOpen) sheetHtml = buildBadgesSheet();
+      sheetRoot.innerHTML = sheetHtml;
+
+      modalRoot.innerHTML = ui.levelUpModal ? buildLevelUpModal(ui.levelUpModal) : "";
+
+      document.body.classList.toggle("sheet-open", ui.shopOpen || ui.statsOpen || ui.badgesOpen || !!ui.levelUpModal);
+
+      if (focusId) {
+        const el = document.getElementById(focusId);
+        if (el && typeof el.focus === "function") {
+          el.focus();
+          if (selStart != null && typeof el.setSelectionRange === "function") {
+            try { el.setSelectionRange(selStart, selEnd); } catch {}
           }
         }
-        return null;
       }
 
-      function setAuthFlowTestCookie() {
-        // Set the cookie's TTL to 1 minute. This is a short lived cookie because it is only used
-        // when the user does not have an auth token or their auth token needs to be reset.
-        // Making this cookie too long-lived allows the user to get into a state where they can't
-        // mint a new auth token.
-        document.cookie = `${AUTH_FLOW_TEST_COOKIE_NAME}=${COOKIE_VALUE}; Path=/; Secure; SameSite=None; Domain=${window.location.hostname}; Partitioned; Max-Age=60;`;
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function buildApp() {
+      const level = levelInfo(state.totalXp);
+      return [
+        buildHeader(),
+        buildLevelCard(level),
+        buildWeekCard(),
+        buildChoresSection(),
+        buildAddChoreSection(),
+      ].join("");
+    }
+
+    function buildHeader() {
+      const perm = notifPermission();
+      const notifClass = notifActive() ? "notif-on" : (perm === "denied" || perm === "unsupported" ? "notif-off" : "");
+      const notifTitle = notifActive() ? "Reminders on — click to disable"
+        : perm === "denied" ? "Notifications blocked in browser"
+        : perm === "unsupported" ? "Notifications unsupported"
+        : "Enable reminders";
+      const coinLabel = state.coins > 999 ? "999+" : String(state.coins);
+
+      return `
+        <header class="header">
+          <div class="brand">
+            <h1>Chorequest</h1>
+            <p>${esc(levelTitle(levelInfo(state.totalXp).level))}</p>
+          </div>
+          <div class="header-actions">
+            <button class="icon-btn shop-btn" data-action="open-shop"
+              aria-label="Open reward shop (${state.coins} coins)"
+              title="Reward shop — ${state.coins} coins">
+              ${icon("shopping-bag")}
+              ${state.coins > 0 ? `<span class="coin-badge">${coinLabel}</span>` : ""}
+            </button>
+            <button class="icon-btn" data-action="open-stats" aria-label="Statistics" title="Statistics">
+              ${icon("bar-chart-3")}
+            </button>
+            <button class="icon-btn ${notifClass}" data-action="toggle-notifications"
+              aria-label="${esc(notifTitle)}" title="${esc(notifTitle)}">
+              ${icon(notifActive() ? "bell-ring" : (perm === "denied" ? "bell-off" : "bell"))}
+            </button>
+            <button class="icon-btn" data-action="toggle-theme" aria-label="Toggle dark mode" title="Toggle dark mode">
+              ${icon(ui.dark ? "sun" : "moon")}
+            </button>
+          </div>
+        </header>
+      `;
+    }
+
+    function buildLevelCard(level) {
+      const total = state.chores.length;
+      const done = state.chores.filter((c) => c.completedAt).length;
+      const pct = total === 0 ? 0 : (done / total) * 100;
+      const weekly = state.chores.filter((c) => c.frequency === "weekly");
+      const monthly = state.chores.filter((c) => c.frequency === "monthly");
+      const weeklyDone = weekly.filter((c) => c.completedAt).length;
+      const monthlyDone = monthly.filter((c) => c.completedAt).length;
+
+      const radius = 26;
+      const circ = 2 * Math.PI * radius;
+      const offset = circ - (Math.min(100, Math.max(0, pct)) / 100) * circ;
+
+      const badgesUnlocked = countUnlockedTiers();
+      const badgesTotal = countTotalTiers();
+      const badgesPct = Math.round((badgesUnlocked / badgesTotal) * 100);
+      const streakLabel = state.streak === 1 ? "day" : "days";
+      const bestStreakLabel = state.bestStreak === 1 ? "day" : "days";
+
+      return `
+        <section class="card level-card">
+          <div class="level-head">
+            <div>
+              <p class="level-label">Current level</p>
+              <p class="level-number">${level.level}</p>
+            </div>
+            <div class="level-total">
+              <p class="xp-total">${state.totalXp} XP total</p>
+              <p class="xp-next">${level.xpToNext} XP to level ${level.level + 1}</p>
+            </div>
+          </div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:${level.progress}%"></div></div>
+          <p class="xp-caption">${level.xpIntoLevel} / ${level.xpForLevel} XP this level</p>
+
+          <div class="ring-block">
+            <div class="ring-wrap">
+              <svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="${radius}" fill="none" stroke="var(--border)" stroke-width="7"/>
+                <circle cx="32" cy="32" r="${radius}" fill="none" stroke="var(--primary)" stroke-width="7"
+                  stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+                  style="transition: stroke-dashoffset 700ms cubic-bezier(0.22,1,0.36,1);"/>
+              </svg>
+              <span class="ring-value">${Math.round(pct)}%</span>
+            </div>
+            <div class="ring-text">
+              <p class="ring-title">All chores</p>
+              <p class="ring-caption">${done}/${total} · ${weeklyDone}/${weekly.length} weekly · ${monthlyDone}/${monthly.length} monthly</p>
+            </div>
+          </div>
+
+          <div class="dash-stats">
+            <div class="dash-stat streak" title="Current streak — best: ${state.bestStreak} ${bestStreakLabel}">
+              <span class="dash-stat-icon">${icon("flame")}</span>
+              <div class="dash-stat-info">
+                <p class="dash-stat-value">${state.streak}<span class="unit">${streakLabel}</span></p>
+                <p class="dash-stat-label">Streak</p>
+              </div>
+              ${state.freezes > 0 ? `<span class="dash-stat-extra" title="Streak freeze available">${icon("snowflake")}${state.freezes}</span>` : ""}
+            </div>
+            <button type="button" class="dash-stat badges clickable"
+              data-action="open-badges"
+              aria-label="View all badges (${badgesUnlocked} of ${badgesTotal} unlocked)"
+              title="${badgesUnlocked} of ${badgesTotal} tiers unlocked — tap to view">
+              <span class="dash-stat-icon">${icon("award")}</span>
+              <div class="dash-stat-info">
+                <p class="dash-stat-value">${badgesUnlocked}<span class="unit">/ ${badgesTotal}</span></p>
+                <p class="dash-stat-label">Badges</p>
+                <div class="dash-badge-progress">
+                  <div class="dash-badge-progress-fill" style="width:${badgesPct}%"></div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </section>
+      `;
+    }
+
+    function buildWeekCard() {
+      const ws = weekStats();
+      if (ws.xp === 0 && ws.chores === 0) return "";
+
+      let trendHtml = "";
+      if (ws.trend !== null && ws.lastXp > 0) {
+        const isUp = ws.trend >= 0;
+        const arrow = isUp ? "trending-up" : "trending-down";
+        trendHtml = `
+          <span class="week-trend ${isUp ? "" : "negative"}">
+            ${icon(arrow)}
+            ${isUp ? "+" : ""}${ws.trend}%
+          </span>
+        `;
       }
 
-      /**
-       * Returns true if the test cookie is set, false otherwise.
-       */
-      function authFlowTestCookieIsSet() {
-        return getCookie(AUTH_FLOW_TEST_COOKIE_NAME) === COOKIE_VALUE;
+      const choresLabel = ws.chores === 1 ? "chore" : "chores";
+
+      return `
+        <div class="week-card" title="Your progress this week">
+          <span class="week-icon">${icon("calendar-check-2")}</span>
+          <div class="week-content">
+            <p class="week-title">This week</p>
+            <div class="week-row">
+              <span class="week-main">${ws.xp}<span class="unit">XP</span></span>
+              ${trendHtml}
+            </div>
+            <p class="week-sub"><strong>${ws.chores}</strong> ${choresLabel} completed since Sunday</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildChoresSection() {
+      const tab = ui.tab;
+      const filter = ui.choreFilter;
+
+      const tabList = state.chores.filter((c) => c.frequency === tab);
+      const pending = tabList.filter((c) => !c.completedAt);
+      const done = tabList.filter((c) => c.completedAt);
+      const remainingXp = pending.reduce((sum, c) => sum + c.xp, 0);
+
+      const counts = { all: tabList.length, pending: pending.length, done: done.length };
+
+      let visible;
+      if (filter === "pending") visible = pending;
+      else if (filter === "done") visible = done;
+      else visible = tabList;
+
+      const sorted = [...visible].sort((a, b) => {
+        if (Boolean(a.completedAt) !== Boolean(b.completedAt)) return a.completedAt ? 1 : -1;
+        return b.xp - a.xp;
+      });
+
+      const groups = new Map();
+      for (const c of sorted) {
+        if (!groups.has(c.category)) groups.set(c.category, []);
+        groups.get(c.category).push(c);
       }
 
-      /**
-       * Redirects to the return url. If autoClose is true, then the return url will be opened in a
-       * new window, and it will be closed automatically when the page loads.
-       * Options:
-       *   storageAccessGranted: if true, appends __storage_access_granted=1 to
-       *   the return url so the Lua auth script can set the test cookie
-       *   server-side (needed for Safari/iOS where document.cookie is blocked).
-       */
-      async function redirectToReturnUrl(autoClose, storageAccessGranted = false) {
-        const initialReturnUrlStr = new URLSearchParams(window.location.search).get('return_url');
-        const returnUrl = initialReturnUrlStr ? new URL(initialReturnUrlStr) : null;
-
-        // Prevent potentially malicious URLs from being used
-        if (returnUrl.protocol.toLowerCase() === 'javascript:') {
-          console.error('Potentially malicious return URL blocked');
-          return;
+      let groupsHtml = "";
+      if (groups.size === 0) {
+        let emptyIcon = "list-todo";
+        let emptyText = "No chores yet. Add your first one below.";
+        if (filter === "pending" && tabList.length > 0) { emptyIcon = "party-popper"; emptyText = "All done — nothing left in this tab!"; }
+        else if (filter === "done" && tabList.length > 0) { emptyIcon = "circle-dashed"; emptyText = "No chores completed yet in this tab."; }
+        groupsHtml = `
+          <div class="empty">
+            <div class="empty-icon">${icon(emptyIcon)}</div>
+            <p>${esc(emptyText)}</p>
+          </div>
+        `;
+      } else {
+        for (const [category, chores] of groups.entries()) {
+          groupsHtml += `
+            <h3 class="category-title">
+              <i data-lucide="${catIcon(category)}" class="cat-icon"></i>
+              ${esc(category)}
+            </h3>
+            <div class="chore-list">${chores.map(buildChoreCard).join("")}</div>
+          `;
         }
+      }
 
-        if (storageAccessGranted) {
-          returnUrl.searchParams.set('__storage_access_granted', '1');
-        }
+      const filters = [
+        { id: "all", label: "All", icon: "layers" },
+        { id: "pending", label: "To do", icon: "circle-dashed" },
+        { id: "done", label: "Done", icon: "check-check" },
+      ];
 
-        if (autoClose) {
-          returnUrl.searchParams.set('__auto_close', '1');
-          const url = new URL(window.location.href);
-          url.searchParams.set('return_url', returnUrl.toString());
-          // Land on the cookie check page first, so the user can interact with it before proceeding
-          // to the return url where cookies can be set.
-          window.open(url.toString(), '_blank');
-          const hasAccess = await document.hasStorageAccess();
-          document.querySelector('#stepOne').classList.add('hidden');
-          if (!hasAccess) {
-            document.querySelector('#stepThree').classList.remove('hidden');
-          } else {
-            window.location.reload();
+      return `
+        <section class="section">
+          <div class="tabs-row">
+            <div class="tabs">
+              ${["weekly", "monthly"].map((f) => `
+                <button class="tab ${ui.tab === f ? "active" : ""}" data-action="set-tab" data-tab="${f}">
+                  ${f === "weekly" ? "Weekly" : "Monthly"}
+                </button>
+              `).join("")}
+            </div>
+            <span class="chores-summary">${pending.length} left · ${remainingXp} XP</span>
+          </div>
+
+          <div class="filter-row">
+            ${filters.map((f) => `
+              <button type="button" class="filter-chip ${filter === f.id ? "active" : ""}"
+                data-action="set-filter" data-filter="${f.id}">
+                ${icon(f.icon)}
+                <span>${f.label}</span>
+                <span class="filter-count">${counts[f.id]}</span>
+              </button>
+            `).join("")}
+          </div>
+
+          <div class="chore-groups">${groupsHtml}</div>
+        </section>
+      `;
+    }
+
+    function buildChoreCard(chore) {
+      const done = Boolean(chore.completedAt);
+      const burst = ui.burstId === chore.id;
+      const undoBurst = ui.undoBurstId === chore.id;
+      return `
+        <div class="chore-card ${done ? "done" : ""}">
+          <div class="chore-main">
+            <p class="chore-name">
+              <i data-lucide="${catIcon(chore.category)}" class="chore-name-icon"></i>
+              <span>${esc(chore.name)}</span>
+            </p>
+            <div class="chore-tags">
+              <span class="chip">${esc(chore.category)}</span>
+              <span class="chip">${esc(chore.frequency)}</span>
+              <span class="chip difficulty ${chore.difficulty}">${esc(chore.difficulty)}</span>
+            </div>
+          </div>
+          <div class="chore-actions">
+            ${burst ? `<span class="xp-float">+${chore.xp} XP</span>` : ""}
+            ${undoBurst ? `<span class="xp-float negative">−${chore.xp} XP</span>` : ""}
+            <span class="chore-xp">+${chore.xp}</span>
+            ${done
+              ? `
+                <button class="chore-btn ghost undo-hover" data-action="undo-complete-chore" data-id="${chore.id}"
+                  aria-label="Undo completion of ${esc(chore.name)}" title="Undo completion">${icon("undo-2")}</button>
+                <button class="chore-btn ghost delete-hover" data-action="delete-chore" data-id="${chore.id}"
+                  aria-label="Remove ${esc(chore.name)}" title="Delete">${icon("trash-2")}</button>
+              `
+              : `<button class="chore-btn" data-action="complete-chore" data-id="${chore.id}" aria-label="Complete ${esc(chore.name)}">${icon("check")}</button>`
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    /* ============================================================
+       Badges sheet — chain-based UI
+       ============================================================ */
+    function buildBadgeChain(chain) {
+      const prog = chainProgress(chain);
+      const { value, unlockedCount, totalTiers, isMaxed, nextTier, currentTier, progressPct } = prog;
+
+      let subHtml;
+      if (isMaxed) {
+        subHtml = `<strong>${esc(chain.formatValue(value))}</strong> — all tiers unlocked!`;
+      } else if (currentTier) {
+        const remaining = nextTier.threshold - value;
+        subHtml = `<strong>${esc(currentTier.name)}</strong> · ${esc(chain.formatValue(value))} · ${remaining} to next`;
+      } else {
+        const remaining = nextTier.threshold - value;
+        subHtml = `Next: <strong>${esc(nextTier.name)}</strong> · ${remaining} to go`;
+      }
+
+      const dotsHtml = chain.tiers.map((_, i) => {
+        const filled = i < unlockedCount;
+        const current = i === unlockedCount && !isMaxed;
+        const cls = `tier-dot${filled ? " filled" : ""}${current ? " current" : ""}`;
+        const tier = chain.tiers[i];
+        return `<span class="${cls}" title="${esc(tier.name)} — ${esc(tier.hint)}"></span>`;
+      }).join("");
+
+      return `
+        <div class="badge-chain ${isMaxed ? "maxed" : ""}" data-chain="${chain.id}">
+          <div class="chain-head">
+            <span class="chain-icon">${icon(chain.icon)}</span>
+            <div class="chain-info">
+              <p class="chain-name">${esc(chain.name)}</p>
+              <p class="chain-sub">${subHtml}</p>
+            </div>
+            <span class="chain-count">${unlockedCount}/${totalTiers}</span>
+          </div>
+          <div class="chain-bar">
+            <div class="chain-fill" style="width:${progressPct}%"></div>
+          </div>
+          <div class="chain-tiers">${dotsHtml}</div>
+        </div>
+      `;
+    }
+
+    function buildBadgesSheet() {
+      const unlocked = countUnlockedTiers();
+      const total = countTotalTiers();
+      const pct = Math.round((unlocked / total) * 100);
+
+      const summary = `
+        <div class="badges-summary">
+          <span class="badges-summary-icon">${icon("award")}</span>
+          <div class="badges-summary-text">
+            <p class="badges-summary-title">${unlocked} of ${total} tiers unlocked</p>
+            <p class="badges-summary-sub">${pct}% complete — keep progressing through each chain.</p>
+            <div class="badges-summary-bar">
+              <div class="badges-summary-fill" style="width:${pct}%"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const chainsHtml = BADGE_CHAINS.map(buildBadgeChain).join("");
+
+      return `
+        <div class="sheet-overlay" data-action="close-badges">
+          <div class="sheet" data-stop-propagation="true">
+            <div class="sheet-grabber"></div>
+            <div class="sheet-header">
+              <h2>Badge chains</h2>
+              <span class="sheet-count">${icon("award")} ${unlocked} / ${total}</span>
+              <button class="sheet-close" data-action="close-badges" aria-label="Close badges">${icon("x")}</button>
+            </div>
+            <div class="sheet-body">
+              ${summary}
+              <div class="chain-list">${chainsHtml}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildAddChoreSection() {
+      const templatesHtml = CHORE_TEMPLATES.slice(0, 5).map((t, i) => `
+        <button type="button" class="template-chip" data-action="pick-template" data-template-index="${i}">
+          ${icon(catIcon(t.category))}
+          ${esc(t.name)}
+        </button>
+      `).join("");
+
+      return `
+        <section class="section">
+          <h2 class="section-title">New chore</h2>
+          <div style="margin-bottom:10px;">
+            <p class="field-label" style="margin-bottom:6px;">Quick add</p>
+            <div class="templates-row">${templatesHtml}</div>
+          </div>
+          <form class="card form-card" data-form="chore">
+            <div>
+              <label class="field-label" for="chore-name">Chore</label>
+              <input id="chore-name" class="field-input" type="text" data-bind="chore-name"
+                placeholder="Clean bathroom" value="${esc(choreDraft.name)}">
+            </div>
+            <div>
+              <label class="field-label" for="chore-category">Category</label>
+              <select id="chore-category" class="field-select" data-bind="chore-category">
+                ${CATEGORIES.map((c) => `<option ${c === choreDraft.category ? "selected" : ""}>${esc(c)}</option>`).join("")}
+              </select>
+            </div>
+            <div>
+              <span class="field-label">Frequency</span>
+              <div class="btn-row two" style="margin-top:6px;">
+                ${["weekly", "monthly"].map((f) => `
+                  <button type="button" class="btn-toggle ${choreDraft.frequency === f ? "active" : ""}"
+                    data-action="pick-frequency" data-frequency="${f}">${f}</button>
+                `).join("")}
+              </div>
+            </div>
+            <div>
+              <span class="field-label">Difficulty</span>
+              <div class="btn-row three" style="margin-top:6px;">
+                ${["easy", "medium", "hard"].map((d) => `
+                  <button type="button" class="btn-toggle ${choreDraft.difficulty === d ? "active" : ""}"
+                    data-action="pick-difficulty" data-difficulty="${d}">${d}</button>
+                `).join("")}
+              </div>
+            </div>
+            <div>
+              <label class="field-label" for="chore-xp">XP reward</label>
+              <input id="chore-xp" class="field-input" type="number" min="5" step="5"
+                data-bind="chore-xp" value="${choreDraft.xp}">
+            </div>
+            <button type="submit" class="btn-primary">${icon("plus")} Add chore</button>
+          </form>
+        </section>
+      `;
+    }
+
+    /* Level-up modal */
+    function buildLevelUpModal(m) {
+      return `
+        <div class="levelup-overlay" data-action="close-levelup">
+          <div class="levelup-card" data-stop-propagation="true">
+            <div class="levelup-content">
+              <i data-lucide="crown" class="levelup-crown"></i>
+              <p class="levelup-label">Level up</p>
+              <p class="levelup-number">${m.level}</p>
+              <p class="levelup-title">${esc(m.title)}</p>
+              <div class="levelup-rewards">
+                ${m.bonusXp > 0 ? `<span>${icon("sparkles")}+${m.bonusXp} XP</span>` : ""}
+                ${m.coins > 0 ? `<span>${icon("coins")}+${m.coins} coins</span>` : ""}
+              </div>
+              <button class="btn-primary" data-action="close-levelup">Continue</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* Shop sheet */
+    function buildShopSheet() {
+      const rewardsHtml = state.rewards.length === 0
+        ? `<p class="empty">No rewards yet. Create one you'll actually look forward to.</p>`
+        : state.rewards.map(buildRewardCard).join("");
+
+      const formHtml = ui.rewardFormOpen
+        ? `
+          <form class="card form-card" data-form="reward" style="margin-top:12px;">
+            <input class="field-input" id="reward-name" type="text" data-bind="reward-name"
+              placeholder="Reward name" value="${esc(ui.rewardDraft.name)}">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <input class="field-input" id="reward-cost" type="number" min="1" style="width:112px;margin-top:0;"
+                data-bind="reward-cost" value="${ui.rewardDraft.cost}">
+              <span style="font-size:0.75rem;color:var(--muted-foreground);">coins</span>
+            </div>
+            <div class="icon-picker">
+              ${REWARD_ICONS.map((i) => `
+                <button type="button" class="icon-pick ${ui.rewardDraft.icon === i ? "active" : ""}"
+                  data-action="pick-reward-icon" data-icon="${i}" aria-label="${i}">
+                  ${icon(REWARD_ICON_MAP[i] || "gift")}
+                </button>
+              `).join("")}
+            </div>
+            <div class="btn-row two">
+              <button type="submit" class="btn-primary">Add reward</button>
+              <button type="button" class="btn-ghost" data-action="cancel-reward">Cancel</button>
+            </div>
+          </form>
+        `
+        : `
+          <button type="button" class="btn-outline" style="margin-top:12px;" data-action="open-reward">
+            ${icon("plus")} New reward
+          </button>
+        `;
+
+      const redeemedHtml = state.redeemed.length === 0 ? "" : `
+        <h3 class="redeemed-title">Claimed</h3>
+        <div class="redeemed-list">
+          ${state.redeemed.slice(0, 8).map((r) => `
+            <div class="redeemed-row">
+              <span style="font-weight:500;">${esc(r.name)}</span>
+              <span class="muted">−${r.cost} · ${new Date(r.at).toLocaleDateString()}</span>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      return `
+        <div class="sheet-overlay" data-action="close-shop">
+          <div class="sheet" data-stop-propagation="true">
+            <div class="sheet-grabber"></div>
+            <div class="sheet-header">
+              <h2>Reward shop</h2>
+              <span class="sheet-coins">${icon("coins")} ${state.coins}</span>
+              <button class="sheet-close" data-action="close-shop" aria-label="Close shop">${icon("x")}</button>
+            </div>
+            <div class="sheet-body">
+              <div class="reward-list">${rewardsHtml}</div>
+              ${formHtml}
+              ${redeemedHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildRewardCard(r) {
+      const affordable = state.coins >= r.cost;
+      return `
+        <div class="reward-card ${affordable ? "" : "locked"}">
+          <span class="reward-icon">${icon(REWARD_ICON_MAP[r.icon] || "gift")}</span>
+          <div class="reward-main">
+            <p class="reward-name">${esc(r.name)}</p>
+            <p class="reward-cost">${r.cost} coins</p>
+          </div>
+          <button class="reward-delete" data-action="delete-reward" data-id="${r.id}" aria-label="Delete ${esc(r.name)}">
+            ${icon("trash-2")}
+          </button>
+          <button class="reward-claim" data-action="redeem-reward" data-id="${r.id}" ${affordable ? "" : "disabled"}>
+            ${affordable ? "Claim" : `${r.cost - state.coins} more`}
+          </button>
+        </div>
+      `;
+    }
+
+    /* Stats sheet */
+    function buildStatsSheet() {
+      const days = [];
+      let maxXp = 1;
+      for (let i = 13; i >= 0; i--) {
+        const key = dateKeyOffset(-i);
+        const xp = state.xpLog[key] || 0;
+        if (xp > maxXp) maxXp = xp;
+        days.push({ key, xp, isToday: i === 0 });
+      }
+
+      const chartHtml = days.map((d) => {
+        const h = d.xp === 0 ? 0 : Math.max(6, (d.xp / maxXp) * 100);
+        const label = d.key.slice(8);
+        return `
+          <div class="chart-col" title="${d.key} — ${d.xp} XP">
+            <div class="chart-bar ${d.xp === 0 ? "empty" : ""}" style="height:${h}%"></div>
+            <span class="chart-label ${d.isToday ? "today" : ""}">${label}</span>
+          </div>
+        `;
+      }).join("");
+
+      const avg7 = Math.round(days.slice(7).reduce((s, d) => s + d.xp, 0) / 7);
+      let bestDayKey = null, bestDayXp = 0;
+      for (const [k, v] of Object.entries(state.xpLog)) {
+        if (v > bestDayXp) { bestDayXp = v; bestDayKey = k; }
+      }
+      const bestDayLabel = bestDayKey ? `${new Date(bestDayKey + "T00:00:00").toLocaleDateString()} — ${bestDayXp} XP` : "—";
+
+      return `
+        <div class="sheet-overlay" data-action="close-stats">
+          <div class="sheet" data-stop-propagation="true">
+            <div class="sheet-grabber"></div>
+            <div class="sheet-header">
+              <h2>Statistics</h2>
+              <button class="sheet-close" data-action="close-stats" aria-label="Close stats">${icon("x")}</button>
+            </div>
+            <div class="sheet-body">
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <p class="stat-value">${state.totalXp}</p>
+                  <p class="stat-label">Total XP</p>
+                </div>
+                <div class="stat-card">
+                  <p class="stat-value">${state.completedCount}</p>
+                  <p class="stat-label">Chores done</p>
+                </div>
+                <div class="stat-card">
+                  <p class="stat-value">${state.streak}</p>
+                  <p class="stat-label">Streak</p>
+                </div>
+                <div class="stat-card">
+                  <p class="stat-value">${state.bestStreak}</p>
+                  <p class="stat-label">Best streak</p>
+                </div>
+              </div>
+
+              <h3 class="stats-subtitle">XP · last 14 days</h3>
+              <div class="chart">${chartHtml}</div>
+
+              <h3 class="stats-subtitle">Highlights</h3>
+              <div class="highlight-row"><span>Avg XP / day (7d)</span><strong>${avg7} XP</strong></div>
+              <div class="highlight-row"><span>Best day</span><strong>${esc(bestDayLabel)}</strong></div>
+              <div class="highlight-row"><span>Perfect weeks</span><strong>${state.perfectWeeks}</strong></div>
+              <div class="highlight-row"><span>Rewards claimed</span><strong>${state.rewardsClaimed}</strong></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* Toast */
+    function showToast(text, iconName = "sparkles") {
+      toastEl.innerHTML = `<i data-lucide="${iconName}"></i><span>${esc(text)}</span>`;
+      toastEl.hidden = false;
+      if (window.lucide) window.lucide.createIcons();
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toastEl.hidden = true; toastTimer = null; }, 2400);
+    }
+
+    /* Undo toast — used only for deletions now */
+    function showUndoToast(text, duration = 5000) {
+      undoToastText.textContent = text;
+      undoToastEl.hidden = false;
+      if (window.lucide) window.lucide.createIcons();
+      if (undoTimer) clearTimeout(undoTimer);
+      undoTimer = setTimeout(() => {
+        undoToastEl.hidden = true;
+        undoTimer = null;
+        pendingUndo = null;
+      }, duration);
+    }
+
+    function hideUndoToast() {
+      if (undoTimer) { clearTimeout(undoTimer); undoTimer = null; }
+      undoToastEl.hidden = true;
+    }
+
+    function performUndo() {
+      if (!pendingUndo || pendingUndo.type !== "delete") return;
+      const { chore, index } = pendingUndo;
+      pendingUndo = null;
+      hideUndoToast();
+
+      const newChores = [...state.chores];
+      const insertAt = Math.min(Math.max(0, index), newChores.length);
+      newChores.splice(insertAt, 0, chore);
+      state = { ...state, chores: newChores };
+      saveState(state);
+      haptic(15);
+      render();
+    }
+
+    /* Actions */
+    function applyTheme() {
+      document.documentElement.classList.toggle("dark", ui.dark);
+      try { localStorage.setItem(THEME_KEY, ui.dark ? "dark" : "light"); } catch {}
+    }
+
+    function closeAllSheets() {
+      ui.shopOpen = false;
+      ui.statsOpen = false;
+      ui.badgesOpen = false;
+      ui.rewardFormOpen = false;
+    }
+
+    /* Complete a chore. We store a small per-chore metadata record so the
+       inline undo button (next to the trash icon) can reverse every single
+       gain this completion produced: XP, bonus XP, coins, level-up coins,
+       streak coins, and any streak freeze that was consumed. */
+    function completeChore(id) {
+      const chore = state.chores.find((c) => c.id === id);
+      if (!chore || chore.completedAt) return;
+
+      haptic(20);
+      ui.burstId = id;
+      setTimeout(() => { if (ui.burstId === id) { ui.burstId = null; render(); } }, 1200);
+
+      const beforeLevel = levelInfo(state.totalXp).level;
+      const baseXp = state.totalXp + chore.xp;
+      const levelFromChore = levelInfo(baseXp).level;
+      const levelUpBonus = levelFromChore > beforeLevel ? levelFromChore * 25 : 0;
+      const totalXp = baseXp + levelUpBonus;
+      const xpGained = chore.xp + levelUpBonus;
+
+      const streakInfo = nextStreak(state);
+      const streak = streakInfo.streak;
+      const bestStreak = streakInfo.bestStreak;
+      const freezeUsed = !!streakInfo.freezeUsed;
+      const freezesToSpend = streakInfo.freezesToSpend || 0;
+
+      const afterLevel = levelInfo(totalXp).level;
+      const streakBonus = streak !== state.streak ? coinsForStreak(streak) : 0;
+      const levelCoins = afterLevel > beforeLevel ? coinsForLevel(afterLevel) : 0;
+      const choreCoins = coinsForChore(chore.xp);
+      const coinsGained = choreCoins + levelCoins + streakBonus;
+
+      const today = dayKey();
+      const wasFirstToday = (state.completionsLog[today] || 0) === 0;
+
+      const xpLog = { ...state.xpLog, [today]: (state.xpLog[today] || 0) + xpGained };
+      const completionsLog = { ...state.completionsLog, [today]: (state.completionsLog[today] || 0) + 1 };
+      const freezesLeft = freezeUsed ? Math.max(0, state.freezes - freezesToSpend) : state.freezes;
+
+      // Snapshot the day's opening streak state (only needed on the first
+      // completion of the day) so a full undo can restore it precisely.
+      const dailySnapshots = { ...(state.dailySnapshots || {}) };
+      if (wasFirstToday) {
+        dailySnapshots[today] = {
+          streak: state.streak,
+          bestStreak: state.bestStreak,
+          freezes: state.freezes,
+          lastCompletedDay: state.lastCompletedDay,
+        };
+      }
+
+      const nowIso = new Date().toISOString();
+      state = {
+        ...state,
+        totalXp,
+        coins: state.coins + coinsGained,
+        completedCount: state.completedCount + 1,
+        lastCompletedDay: today,
+        streak,
+        bestStreak,
+        freezes: freezesLeft,
+        xpLog,
+        completionsLog,
+        dailySnapshots,
+        chores: state.chores.map((c) => c.id === id
+          ? { ...c, completedAt: nowIso, completionMeta: { xpGained, coinsGained, day: today, at: nowIso } }
+          : c
+        ),
+      };
+
+      if (freezeUsed) haptic([15, 30, 15]);
+
+      if (afterLevel > beforeLevel) {
+        const token = ++levelUpToken;
+        ui.levelUpModal = {
+          level: afterLevel,
+          title: levelTitle(afterLevel),
+          bonusXp: levelUpBonus,
+          coins: levelCoins,
+        };
+        fireConfetti();
+        haptic([30, 60, 30, 60, 90]);
+        setTimeout(() => {
+          if (token === levelUpToken && ui.levelUpModal) {
+            ui.levelUpModal = null;
+            render();
           }
-        } else {
-          window.location.href = returnUrl.toString();
-        }
+        }, 4200);
       }
 
-      /**
-       * Grants the browser permission to set cookies. If successful, then it redirects to the
-       * return url.
-       */
-      async function grantStorageAccess() {
-        try {
-          await document.requestStorageAccess();
-          // Recent Safari/iOS versions block document.cookie entirely in
-          // cross-site iframes, even after requestStorageAccess(). Only
-          // server-side Set-Cookie headers work. Signal to the Lua auth script
-          // via query param so it can set the test cookie server-side.
-          redirectToReturnUrl(false, /* storageAccessGranted= */ true);
-        } catch (err) {
-          console.log('error after button click: ', err);
-        }
+      notifyMilestone({
+        afterLevel, beforeLevel, levelUpBonus, levelCoins, streakBonus,
+        streak, choreName: chore.name, choreXp: chore.xp,
+      });
+
+      saveState(state);
+      render();
+    }
+
+    /* Undo a completed chore. Reverses everything the completion granted:
+       - total XP (including any level-up bonus XP)
+       - coins (chore coins + level-up coins + streak bonus coins)
+       - the daily XP log entry and the daily completion count
+       - streak / best streak / freezes / lastCompletedDay (restored from
+         the daily snapshot if this was the last completion of the day)
+       - the completed flag + completionMeta on the chore itself
+       - any pending level-up modal from that completion */
+    function undoCompleteChore(id) {
+      const chore = state.chores.find((c) => c.id === id);
+      if (!chore || !chore.completedAt) return;
+
+      const meta = chore.completionMeta;
+      if (!meta) {
+        // Defensive fallback — clear the flag only.
+        state = {
+          ...state,
+          chores: state.chores.map((c) => c.id === id ? { ...c, completedAt: null } : c),
+        };
+        saveState(state);
+        render();
+        return;
       }
 
-      /**
-       * Verifies that the browser can set cookies. If it can, then it redirects to the return url.
-       * If it can't, then it shows the error UI.
-       */
-      function verifyCanSetCookies() {
-        setAuthFlowTestCookie();
-        if (authFlowTestCookieIsSet()) {
-          // Check if we are on the auto-close flow, and if so show the interact button.
-          const returnUrl = new URLSearchParams(window.location.search).get('return_url');
-          const autoClose = new URL(returnUrl).searchParams.has('__auto_close');
-          if (autoClose) {
-            document.querySelector('#stepOne').classList.add('hidden');
-            document.querySelector('#stepTwo').classList.remove('hidden');
-          } else {
-            redirectToReturnUrl(false);
-            return;
-          }
+      const day = meta.day;
+
+      // XP log: subtract exactly what was added
+      const xpLog = { ...state.xpLog };
+      const newDayXp = Math.max(0, (xpLog[day] || 0) - meta.xpGained);
+      if (newDayXp > 0) xpLog[day] = newDayXp;
+      else delete xpLog[day];
+
+      // Completion log: decrement, and clean up if it hits zero
+      const completionsLog = { ...state.completionsLog };
+      const newDayCompletions = Math.max(0, (completionsLog[day] || 0) - 1);
+      const dayIsEmpty = newDayCompletions === 0;
+      if (dayIsEmpty) delete completionsLog[day];
+      else completionsLog[day] = newDayCompletions;
+
+      // Restore streak / freeze state if this was the last completion of the day
+      let streak = state.streak;
+      let bestStreak = state.bestStreak;
+      let freezes = state.freezes;
+      let lastCompletedDay = state.lastCompletedDay;
+
+      const dailySnapshots = { ...(state.dailySnapshots || {}) };
+      if (dayIsEmpty) {
+        const snap = dailySnapshots[day];
+        if (snap) {
+          streak = snap.streak;
+          bestStreak = snap.bestStreak;
+          freezes = snap.freezes;
+          lastCompletedDay = snap.lastCompletedDay;
         }
-        // The cookie could not be set, so initiate the recovery flow.
-        document.querySelector('.logo').classList.add('hidden');
-        document.querySelector('.spinner').classList.add('hidden');
-        document.querySelector('#error-ui').classList.remove('hidden');
+        delete dailySnapshots[day];
       }
 
-      // Start the cookie verification process.
-      verifyCanSetCookies();
-    </script>
-  </body>
+      state = {
+        ...state,
+        totalXp: Math.max(0, state.totalXp - meta.xpGained),
+        coins: Math.max(0, state.coins - meta.coinsGained),
+        completedCount: Math.max(0, state.completedCount - 1),
+        streak,
+        bestStreak,
+        freezes,
+        lastCompletedDay,
+        xpLog,
+        completionsLog,
+        dailySnapshots,
+        chores: state.chores.map((c) => {
+          if (c.id !== id) return c;
+          const { completionMeta, ...rest } = c;
+          return { ...rest, completedAt: null };
+        }),
+      };
+
+      // Dismiss any level-up modal that came from this completion
+      ui.levelUpModal = null;
+      levelUpToken++;
+
+      // Brief negative-XP float on the card
+      ui.undoBurstId = id;
+      setTimeout(() => { if (ui.undoBurstId === id) { ui.undoBurstId = null; render(); } }, 1100);
+
+      saveState(state);
+      haptic(15);
+      showToast("Completion undone", "undo-2");
+      render();
+    }
+
+    function deleteChore(id) {
+      const idx = state.chores.findIndex((c) => c.id === id);
+      if (idx === -1) return;
+      const chore = state.chores[idx];
+
+      if (pendingUndo) {
+        pendingUndo = null;
+        hideUndoToast();
+      }
+
+      state = { ...state, chores: state.chores.filter((c) => c.id !== id) };
+      pendingUndo = { type: "delete", chore, index: idx };
+
+      saveState(state);
+      haptic(15);
+      render();
+
+      showUndoToast(`Deleted "${chore.name}"`, 5000);
+    }
+
+    function addChore() {
+      if (!choreDraft.name.trim()) return;
+      const chore = {
+        id: uid(),
+        name: choreDraft.name.trim(),
+        category: choreDraft.category,
+        frequency: choreDraft.frequency,
+        difficulty: choreDraft.difficulty,
+        xp: Math.max(5, Number(choreDraft.xp) || 5),
+        completedAt: null,
+      };
+      state = { ...state, chores: [chore, ...state.chores] };
+      choreDraft.name = "";
+      saveState(state);
+      haptic(15);
+      render();
+    }
+
+    function addReward() {
+      if (!ui.rewardDraft.name.trim()) return;
+      const reward = {
+        id: uid(),
+        name: ui.rewardDraft.name.trim(),
+        cost: Math.max(1, Number(ui.rewardDraft.cost) || 1),
+        icon: ui.rewardDraft.icon,
+      };
+      state = { ...state, rewards: [...state.rewards, reward] };
+      ui.rewardDraft = { name: "", cost: 20, icon: "gift" };
+      ui.rewardFormOpen = false;
+      saveState(state);
+      render();
+    }
+
+    function deleteReward(id) {
+      state = { ...state, rewards: state.rewards.filter((r) => r.id !== id) };
+      saveState(state);
+      render();
+    }
+
+    function redeemReward(id) {
+      const reward = state.rewards.find((r) => r.id === id);
+      if (!reward || state.coins < reward.cost) {
+        haptic(30);
+        return;
+      }
+      state = {
+        ...state,
+        coins: state.coins - reward.cost,
+        rewardsClaimed: (state.rewardsClaimed || 0) + 1,
+        redeemed: [
+          { id: uid(), name: reward.name, cost: reward.cost, at: new Date().toISOString() },
+          ...state.redeemed,
+        ],
+      };
+      showToast(`Claimed: ${reward.name}`, "gift");
+      haptic([15, 30, 15]);
+      saveState(state);
+      render();
+    }
+
+    /* Event wiring */
+    document.addEventListener("click", (e) => {
+      const target = e.target.closest("[data-action]");
+      if (!target) return;
+
+      const action = target.dataset.action;
+      if (action === "close-shop" || action === "close-stats" || action === "close-badges" || action === "close-levelup") {
+        const innerStops = e.target.closest("[data-stop-propagation]");
+        const clickedX = e.target.closest(".sheet-close") || e.target.closest(".btn-primary");
+        if (innerStops && !clickedX) return;
+      }
+
+      const id = target.dataset.id;
+
+      switch (action) {
+        case "toggle-theme": ui.dark = !ui.dark; applyTheme(); render(); break;
+        case "toggle-notifications": notifActive() ? disableNotifications() : requestNotificationPermission(); break;
+        case "open-shop": closeAllSheets(); ui.shopOpen = true; render(); break;
+        case "close-shop": ui.shopOpen = false; ui.rewardFormOpen = false; render(); break;
+        case "open-stats": closeAllSheets(); ui.statsOpen = true; render(); break;
+        case "close-stats": ui.statsOpen = false; render(); break;
+        case "open-badges": closeAllSheets(); ui.badgesOpen = true; haptic(10); render(); break;
+        case "close-badges": ui.badgesOpen = false; render(); break;
+        case "close-levelup": ui.levelUpModal = null; render(); break;
+        case "set-tab": ui.tab = target.dataset.tab; render(); break;
+        case "set-filter": ui.choreFilter = target.dataset.filter; render(); break;
+        case "complete-chore": completeChore(id); break;
+        case "undo-complete-chore": undoCompleteChore(id); break;
+        case "delete-chore": deleteChore(id); break;
+        case "open-reward": ui.rewardFormOpen = true; render(); break;
+        case "cancel-reward": ui.rewardFormOpen = false; render(); break;
+        case "delete-reward": deleteReward(id); break;
+        case "redeem-reward": redeemReward(id); break;
+        case "pick-difficulty":
+          choreDraft.difficulty = target.dataset.difficulty;
+          choreDraft.xp = DIFFICULTY_XP[choreDraft.difficulty];
+          render();
+          break;
+        case "pick-frequency": choreDraft.frequency = target.dataset.frequency; render(); break;
+        case "pick-reward-icon": ui.rewardDraft.icon = target.dataset.icon; render(); break;
+        case "pick-template": {
+          const t = CHORE_TEMPLATES[parseInt(target.dataset.templateIndex, 10)];
+          if (!t) break;
+          choreDraft.name = t.name;
+          choreDraft.category = t.category;
+          choreDraft.difficulty = t.difficulty;
+          choreDraft.xp = DIFFICULTY_XP[t.difficulty];
+          haptic(10);
+          render();
+          setTimeout(() => {
+            const el = document.getElementById("chore-name");
+            if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+          }, 0);
+          break;
+        }
+      }
+    });
+
+    undoBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      performUndo();
+    });
+
+    document.addEventListener("input", (e) => {
+      const bind = e.target.dataset?.bind;
+      if (!bind) return;
+      const val = e.target.type === "number" ? Number(e.target.value) : e.target.value;
+      if (bind === "chore-name") choreDraft.name = val;
+      else if (bind === "chore-category") choreDraft.category = val;
+      else if (bind === "chore-xp") choreDraft.xp = val;
+      else if (bind === "reward-name") ui.rewardDraft.name = val;
+      else if (bind === "reward-cost") ui.rewardDraft.cost = val;
+    });
+
+    document.addEventListener("change", (e) => {
+      const bind = e.target.dataset?.bind;
+      if (!bind) return;
+      if (bind === "chore-category") choreDraft.category = e.target.value;
+    });
+
+    document.addEventListener("submit", (e) => {
+      const form = e.target;
+      if (!form.dataset || !form.dataset.form) return;
+      e.preventDefault();
+      if (form.dataset.form === "chore") addChore();
+      else if (form.dataset.form === "reward") addReward();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (ui.levelUpModal) { ui.levelUpModal = null; render(); }
+        else if (ui.shopOpen) { ui.shopOpen = false; ui.rewardFormOpen = false; render(); }
+        else if (ui.statsOpen) { ui.statsOpen = false; render(); }
+        else if (ui.badgesOpen) { ui.badgesOpen = false; render(); }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === "z" && pendingUndo) {
+        e.preventDefault();
+        performUndo();
+      }
+    });
+
+    function scheduleReminders() {
+      if (reminderTimer) clearInterval(reminderTimer);
+      reminderTimer = setInterval(() => { maybeDailyReminder(); }, 15 * 60 * 1000);
+    }
+
+    (function init() {
+      let dark = false;
+      try {
+        const stored = localStorage.getItem(THEME_KEY);
+        if (stored === "dark") dark = true;
+        else if (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches) dark = true;
+      } catch {}
+      ui.dark = dark;
+      applyTheme();
+
+      const beforeResetCounts = state.chores.filter((c) => c.completedAt).length;
+      const afterReset = applyWeeklyReset(state);
+      if (afterReset !== state) {
+        state = afterReset;
+        saveState(state);
+        if (beforeResetCounts > 0) notifyWeeklyReset(beforeResetCounts);
+      }
+
+      setTimeout(maybeDailyReminder, 1500);
+      scheduleReminders();
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") maybeDailyReminder();
+      });
+
+      render();
+    })();
+  })();
+  </script>
+
+  <!-- ===== PWA : enregistrement du Service Worker ===== -->
+  <script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("./service-worker.js");
+        console.log("[ChoreQuest] SW enregistré :", reg.scope);
+
+        reg.addEventListener("updatefound", () => {
+          const newWorker = reg.installing;
+          newWorker?.addEventListener("statechange", () => {
+            if (
+              newWorker.state === "installed" &&
+              navigator.serviceWorker.controller
+            ) {
+              if (confirm("A new version of Chorequest is available. Reload?")) {
+                newWorker.postMessage({ type: "SKIP_WAITING" });
+                window.location.reload();
+              }
+            }
+          });
+        });
+      } catch (e) {
+        console.warn("[ChoreQuest] SW non enregistré :", e);
+      }
+    });
+  }
+  </script>
+  <!-- ===== /PWA ===== -->
+</body>
 </html>
